@@ -28,13 +28,11 @@ export const mockSubmitForm = async <T>(
 }
 
 export async function generateTextFromOpenAI(situation: string) {
-    const r = await fetch("/api/openAi", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ situation }),
-    });
-
-    const data = await r.json();
-    if (!r.ok) throw new Error(data?.error || "Request failed");
-    return data.text as string;
+    const response = await apiClient.post<{ text: string; error?: string }>('/openAi', {
+        situation,
+    })
+    if (response.data?.error) {
+        throw new Error(response.data.error)
+    }
+    return response.data?.text ?? ''
 }

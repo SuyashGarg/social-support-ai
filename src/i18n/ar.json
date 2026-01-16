@@ -12,11 +12,17 @@
     "yes": "نعم",
     "no": "لا",
     "edit": "تعديل",
-    "submitRequestTitle": "قدّم طلبك هنا"
+    "submitRequestTitle": "قدّم طلبك هنا",
+    "helpMeWrite": "ساعدني في الكتابة",
+    "accept": "اعتماد",
+    "discard": "تجاهل",
+    "suggestion": "اقتراح",
+    "generating": "جارٍ الإنشاء..."
   },
   "steps": {
     "profile": "المعلومات الشخصية",
-    "support": "تفاصيل الدعم"
+    "support": "تفاصيل الدعم",
+    "situation": "وصف الحالة"
   },
   "fields": {
     "profile": {
@@ -76,6 +82,14 @@
       "housingStatusFamily": "مع العائلة",
       "housingStatusOther": "أخرى",
       "consent": "أؤكد أن المعلومات المقدمة صحيحة"
+    },
+    "situation": {
+      "financialSituation": "الوضع المالي الحالي",
+      "financialSituationPlaceholder": "اشرح وضعك المالي الحالي",
+      "employmentCircumstances": "ظروف العمل",
+      "employmentCircumstancesPlaceholder": "اشرح ظروف عملك",
+      "reasonForApplying": "سبب التقديم",
+      "reasonForApplyingPlaceholder": "اشرح سبب التقديم"
     }
   }
 }

@@ -34,6 +34,7 @@ export type FormElement = {
   required?: boolean
   prefix?: string
   inputMode?: 'text' | 'numeric' | 'tel' | 'email'
+  assist?: boolean
 }
 
 export type FormStep = {

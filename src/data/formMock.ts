@@ -154,6 +154,36 @@ export const formSteps: FormStep[] = [
         ],
         required: true,
       },
+    ],
+  },
+  {
+    id: 'situation',
+    titleKey: 'steps.situation',
+    elements: [
+      {
+        id: 'financialSituation',
+        type: 'textarea',
+        name: 'financialSituation',
+        labelKey: 'fields.situation.financialSituation',
+        placeholderKey: 'fields.situation.financialSituationPlaceholder',
+        assist: true,
+      },
+      {
+        id: 'employmentCircumstances',
+        type: 'textarea',
+        name: 'employmentCircumstances',
+        labelKey: 'fields.situation.employmentCircumstances',
+        placeholderKey: 'fields.situation.employmentCircumstancesPlaceholder',
+        assist: true,
+      },
+      {
+        id: 'reasonForApplying',
+        type: 'textarea',
+        name: 'reasonForApplying',
+        labelKey: 'fields.situation.reasonForApplying',
+        placeholderKey: 'fields.situation.reasonForApplyingPlaceholder',
+        assist: true,
+      },
       {
         id: 'consent',
         type: 'checkbox',

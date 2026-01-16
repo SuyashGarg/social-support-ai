@@ -41,4 +41,16 @@ export const muiTheme = createTheme({
   typography: {
     fontFamily: theme.fonts.base,
   },
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          cursor: 'pointer',
+          '&.Mui-disabled': {
+            cursor: 'not-allowed',
+          },
+        },
+      },
+    },
+  },
 })

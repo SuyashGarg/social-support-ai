@@ -12,11 +12,17 @@
     "yes": "Yes",
     "no": "No",
     "edit": "Edit",
-    "submitRequestTitle": "Submit your request here"
+    "submitRequestTitle": "Submit your request here",
+    "helpMeWrite": "Help me write",
+    "accept": "Accept",
+    "discard": "Discard",
+    "suggestion": "Suggestion",
+    "generating": "Generating..."
   },
   "steps": {
     "profile": "Personal Information",
-    "support": "Family and Financial Information"
+    "support": "Family and Financial Information",
+    "situation": "Situation Descriptions"
   },
   "fields": {
     "profile": {
@@ -76,6 +82,14 @@
       "housingStatusFamily": "With family",
       "housingStatusOther": "Other",
       "consent": "I confirm the information provided is accurate"
+    },
+    "situation": {
+      "financialSituation": "Current Financial Situation",
+      "financialSituationPlaceholder": "Describe your current financial situation",
+      "employmentCircumstances": "Employment Circumstances",
+      "employmentCircumstancesPlaceholder": "Describe your employment circumstances",
+      "reasonForApplying": "Reason for Applying",
+      "reasonForApplyingPlaceholder": "Explain why you are applying"
     }
   }
 }

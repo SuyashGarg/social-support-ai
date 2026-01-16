@@ -218,18 +218,6 @@ export default function MultiStepForm({
           </Button>
         )}
       </Box>
-
-      <Paper
-        variant="outlined"
-        sx={{ ...styles.preview, ...(isRtl ? styles.previewRtl : {}) }}
-        role="status"
-        aria-live="polite"
-      >
-        <Typography variant="h6" sx={styles.previewTitle}>
-          {previewLabel}
-        </Typography>
-        <pre>{JSON.stringify(formData, null, 2)}</pre>
-      </Paper>
     </>
   )
 }

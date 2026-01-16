@@ -5,6 +5,7 @@ import { formatNationalId, getDir } from '../../common/utils'
 import { useLanguage } from '../../context/LanguageContext'
 import TextInputElement from './TextInputElement'
 import TextareaElement from './TextareaElement'
+import TextareaAssistElement from './TextareaAssistElement'
 import SelectElement from './SelectElement'
 import CheckboxElement from './CheckboxElement'
 import RadioElement from './RadioElement'
@@ -47,6 +48,18 @@ export default function FormElementField({
     const formatted = element.type === 'id' ? formatNationalId(nextValue) : nextValue
     onChange(element.name, formatted)
   }
+  const handleTextareaValueChange = useCallback(
+    (nextValue: string) => {
+      onChange(element.name, nextValue)
+    },
+    [element.name, onChange],
+  )
+  const handleTextareaChange = useCallback<React.ChangeEventHandler<HTMLTextAreaElement>>(
+    (event) => {
+      onChange(element.name, event.target.value)
+    },
+    [element.name, onChange],
+  )
 
   switch (element.type) {
     case 'text':
@@ -71,7 +84,20 @@ export default function FormElementField({
         />
       )
     case 'textarea':
-      return (
+      return element.assist ? (
+        <TextareaAssistElement
+          element={element}
+          value={typeof value === 'string' ? value : ''}
+          label={label}
+          placeholder={placeholder}
+          isRtl={isRtl}
+          dir={dir}
+          required={element.required}
+          errorMessage={errorMessage}
+          onValueChange={handleTextareaValueChange}
+          onBlur={(event) => handleBlur(event.currentTarget.value)}
+        />
+      ) : (
         <TextareaElement
           element={element}
           value={typeof value === 'string' ? value : ''}
@@ -81,7 +107,7 @@ export default function FormElementField({
           dir={dir}
           required={element.required}
           errorMessage={errorMessage}
-          onChange={(event) => onChange(element.name, event.target.value)}
+          onChange={handleTextareaChange}
           onBlur={(event) => handleBlur(event.currentTarget.value)}
         />
       )

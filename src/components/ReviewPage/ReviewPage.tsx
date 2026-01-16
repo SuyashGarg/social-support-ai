@@ -11,10 +11,18 @@ export default function ReviewPage() {
     const navigate = useNavigate()
     const { t } = useTranslation()
 
+    const clearSessionData = () => {
+        if (typeof window !== 'undefined') {
+            window.localStorage.removeItem('socialSupportFormData')
+            window.localStorage.removeItem('socialSupportFormResponse')
+        }
+    }
+
     const response = useMemo(() => {
         if (typeof window === 'undefined') return null
         try {
-            const stored = window.localStorage.getItem('socialSupportFormResponse')
+            const stored = window.localStorage.getItem('socialSupportFormResponse');
+            clearSessionData();
             return stored ? (JSON.parse(stored) as Record<string, string | boolean>) : null
         } catch {
             return null
@@ -22,12 +30,8 @@ export default function ReviewPage() {
     }, [])
 
     const handleStartOver = () => {
-        if (typeof window !== 'undefined') {
-            window.localStorage.removeItem('socialSupportFormData')
-            window.localStorage.removeItem('socialSupportFormResponse')
-        }
         navigate('/step/0')
-    }
+    };
 
     const sections = useMemo(() => {
         if (!response) return []
