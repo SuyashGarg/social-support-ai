@@ -1,0 +1,43 @@
+{
+  "app": {
+    "title": "نموذج متعدد الخطوات",
+    "language": "اللغة",
+    "step": "الخطوة",
+    "back": "رجوع",
+    "next": "التالي",
+    "submit": "إرسال",
+    "preview": "بيانات النموذج"
+  },
+  "steps": {
+    "profile": "المعلومات الشخصية"
+  },
+  "fields": {
+    "fullName": "الاسم",
+    "fullNamePlaceholder": "أدخل الاسم الكامل",
+    "nationalId": "الرقم الوطني",
+    "nationalIdPlaceholder": "123-4567-1234567-1",
+    "dateOfBirth": "تاريخ الميلاد",
+    "gender": "الجنس",
+    "genderFemale": "أنثى",
+    "genderMale": "ذكر",
+    "genderOther": "آخر",
+    "address": "العنوان",
+    "addressPlaceholder": "الشارع والرقم",
+    "city": "المدينة",
+    "country": "الدولة",
+    "countryPlaceholder": "اختر الدولة",
+    "countryUS": "الولايات المتحدة",
+    "countrySA": "المملكة العربية السعودية",
+    "countryEG": "مصر",
+    "state": "المنطقة",
+    "statePlaceholder": "اختر المنطقة",
+    "stateCA": "كاليفورنيا",
+    "stateNY": "نيويورك",
+    "stateRiyadh": "الرياض",
+    "stateCairo": "القاهرة",
+    "phone": "الهاتف",
+    "phonePlaceholder": "+1 555 000 0000",
+    "email": "البريد الإلكتروني",
+    "emailPlaceholder": "example@domain.com"
+  }
+}
