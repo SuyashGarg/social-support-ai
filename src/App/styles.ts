@@ -67,12 +67,12 @@ export const appStyles = {
   brand: {
     display: 'flex',
     alignItems: 'center',
-    gap: 8,
+    gap: 2,
     minWidth: 0,
   },
   logo: {
-    width: 128,
-    height: 128,
+    width: 64,
+    height: 64,
     borderRadius: 6,
     objectFit: 'contain' as const,
   },
