@@ -1,0 +1,43 @@
+{
+  "app": {
+    "title": "Multi-step form",
+    "language": "Language",
+    "step": "Step",
+    "back": "Back",
+    "next": "Next",
+    "submit": "Submit",
+    "preview": "Form data"
+  },
+  "steps": {
+    "profile": "Personal Information"
+  },
+  "fields": {
+    "fullName": "Name",
+    "fullNamePlaceholder": "Enter full name",
+    "nationalId": "National ID",
+    "nationalIdPlaceholder": "123-4567-1234567-1",
+    "dateOfBirth": "Date of Birth",
+    "gender": "Gender",
+    "genderFemale": "Female",
+    "genderMale": "Male",
+    "genderOther": "Other",
+    "address": "Address",
+    "addressPlaceholder": "Street and number",
+    "city": "City",
+    "country": "Country",
+    "countryPlaceholder": "Select a country",
+    "countryUS": "United States",
+    "countrySA": "Saudi Arabia",
+    "countryEG": "Egypt",
+    "state": "State",
+    "statePlaceholder": "Select a state",
+    "stateCA": "California",
+    "stateNY": "New York",
+    "stateRiyadh": "Riyadh",
+    "stateCairo": "Cairo",
+    "phone": "Phone",
+    "phonePlaceholder": "+1 555 000 0000",
+    "email": "Email",
+    "emailPlaceholder": "you@example.com"
+  }
+}
