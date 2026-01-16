@@ -1,19 +1,24 @@
 import { Box, Button, ButtonGroup, Typography } from '@mui/material'
-import { useLanguage } from '../../context/LanguageContext'
+import { useLanguage } from '../context/LanguageContext'
 
-type Props = {
-  label: string
-}
+const LABEL = 'Language'
 
-export default function LanguageSwitch({ label }: Props) {
+export default function LanguageSwitch() {
   const { language, setLanguage } = useLanguage()
 
   return (
-    <Box role="group" aria-label={label} display="flex" alignItems="center" gap={1}>
+    <Box
+      role="group"
+      aria-label={LABEL}
+      display="flex"
+      alignItems="center"
+      gap={1}
+      dir="ltr"
+    >
       <Typography variant="body2" fontWeight={600}>
-        {label}
+        {LABEL}
       </Typography>
-      <ButtonGroup size="small" aria-label={label}>
+      <ButtonGroup size="small" aria-label={LABEL}>
         <Button
           variant={language === 'en' ? 'contained' : 'outlined'}
           onClick={() => setLanguage('en')}

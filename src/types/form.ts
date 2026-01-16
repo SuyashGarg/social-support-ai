@@ -32,6 +32,7 @@ export type FormElement = {
   options?: FormOption[]
   pattern?: string
   required?: boolean
+  prefix?: string
   inputMode?: 'text' | 'numeric' | 'tel' | 'email'
 }
 

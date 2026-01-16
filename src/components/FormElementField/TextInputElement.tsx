@@ -1,4 +1,4 @@
-import { TextField } from '@mui/material'
+import { InputAdornment, TextField } from '@mui/material'
 import { getLabelSx } from './styles'
 import { getTextAlign } from '../../common/utils'
 import type { TextFieldElementProps } from './types'
@@ -14,6 +14,7 @@ export default function TextInputElement({
     errorMessage,
     onChange,
     onBlur,
+    onFocus,
 }: TextFieldElementProps) {
     return (
         <div dir={dir}>
@@ -27,6 +28,7 @@ export default function TextInputElement({
                 required={required}
                 onChange={onChange}
                 onBlur={onBlur}
+                onFocus={onFocus}
                 inputProps={{
                     pattern: element.pattern,
                     inputMode: element.inputMode,
@@ -38,6 +40,15 @@ export default function TextInputElement({
                     required,
                     sx: getLabelSx(isRtl),
                 }}
+                InputProps={
+                    element.prefix
+                        ? {
+                            startAdornment: (
+                                <InputAdornment position="start">{element.prefix}</InputAdornment>
+                            ),
+                        }
+                        : undefined
+                }
                 sx={{
                     '& .MuiInputBase-input': { textAlign: getTextAlign(isRtl) },
                 }}

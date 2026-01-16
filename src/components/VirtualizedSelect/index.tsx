@@ -5,6 +5,7 @@ import type { RowComponentProps } from 'react-window'
 import { LISTBOX_PADDING } from '../../common/constants'
 import { getLabelSx } from '../../common/styles'
 import { getTextAlign } from '../../common/utils'
+import { getInputStyles } from './styles'
 
 type Option = {
     value: string
@@ -127,9 +128,7 @@ export default function VirtualizedSelect({
             )}
             openOnFocus
             clearOnEscape
-            sx={{
-                '& .MuiInputBase-input': { textAlign: getTextAlign(isRtl) },
-            }}
+            sx={getInputStyles(isRtl)}
         />
     )
 }

@@ -1,7 +1,32 @@
 import { theme } from '../theme'
 
 export const appStyles = {
-  app: {
+  page: {
+    minHeight: '100vh',
+    backgroundColor: theme.colors.appBackground,
+    color: theme.colors.textPrimary,
+    width: '100%',
+  },
+  header: {
+    position: 'sticky' as const,
+    top: 0,
+    zIndex: 10,
+    backgroundColor: theme.colors.appBackground,
+    borderBottom: `1px solid ${theme.colors.borderMuted}`,
+    width: '100%',
+  },
+  headerInner: {
+    maxWidth: '100%',
+    width: '100%',
+    margin: '0 auto',
+    padding: '12px 16px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: 16,
+    flexWrap: 'wrap' as const,
+  },
+  main: {
     maxWidth: 720,
     width: '100%',
     margin: '0 auto',
@@ -9,15 +34,6 @@ export const appStyles = {
     display: 'flex',
     flexDirection: 'column' as const,
     gap: 5,
-    color: theme.colors.textPrimary,
-  },
-  toolbar: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    gap: 16,
-    flexWrap: 'wrap' as const,
-    width: '100%',
   },
   toolbarRtl: {
     flexDirection: { xs: 'column', sm: 'row-reverse' } as const,
@@ -38,5 +54,22 @@ export const appStyles = {
   },
   titleRtl: {
     textAlign: 'right' as const,
+  },
+  brand: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 8,
+    minWidth: 0,
+  },
+  logo: {
+    width: 128,
+    height: 128,
+    borderRadius: 6,
+    objectFit: 'contain' as const,
+  },
+  sectionTitle: {
+    margin: '12px 0 4px',
+    fontSize: '1.25rem',
+    fontWeight: 700,
   },
 }
