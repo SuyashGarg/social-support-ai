@@ -1,31 +1,39 @@
-import {
-  Checkbox,
-  FormControl,
-  FormControlLabel,
-  FormLabel,
-  InputLabel,
-  MenuItem,
-  Radio,
-  RadioGroup,
-  Select,
-  TextField,
-} from '@mui/material'
 import { useTranslation } from 'react-i18next'
 import type { FormElement } from '../../types/form'
-import { getLabelSx } from './styles'
+import { getDir } from '../../common/utils'
 import { useLanguage } from '../../context/LanguageContext'
+import TextInputElement from './TextInputElement'
+import TextareaElement from './TextareaElement'
+import SelectElement from './SelectElement'
+import CheckboxElement from './CheckboxElement'
+import RadioElement from './RadioElement'
+import AutocompleteElement from './AutocompleteElement'
 
 type Props = {
   element: FormElement
   value: string | boolean | undefined
+  formData: Record<string, string | boolean>
+  errorMessage?: string | null
   onChange: (name: string, value: string | boolean) => void
+  onBlur?: (element: FormElement, value: string | boolean | undefined) => void
 }
 
-export default function FormElementField({ element, value, onChange }: Props) {
+export default function FormElementField({
+  element,
+  value,
+  formData,
+  errorMessage,
+  onChange,
+  onBlur,
+}: Props) {
   const { t } = useTranslation()
   const { isRtl } = useLanguage()
   const label = t(element.labelKey)
   const placeholder = element.placeholderKey ? t(element.placeholderKey) : ''
+  const dir = getDir(isRtl)
+  const renderOptionLabel = (labelKey: string) => t(labelKey)
+  const handleBlur = (nextValue?: string | boolean) =>
+    onBlur?.(element, typeof nextValue === 'undefined' ? value : nextValue)
 
   switch (element.type) {
     case 'text':
@@ -35,125 +43,117 @@ export default function FormElementField({ element, value, onChange }: Props) {
     case 'phone':
     case 'id':
       return (
-        <div dir={isRtl ? 'rtl' : 'ltr'}>
-          <TextField
-            id={element.id}
-            name={element.name}
-            type={element.type === 'phone' ? 'tel' : element.type === 'id' ? 'text' : element.type}
-            value={typeof value === 'string' ? value : ''}
-            label={label}
-            placeholder={placeholder}
-            onChange={(event) => onChange(element.name, event.target.value)}
-            inputProps={{
-              pattern: element.pattern,
-              inputMode: element.inputMode,
-              dir: isRtl ? 'rtl' : 'ltr',
-              style: { textAlign: isRtl ? 'right' : 'left' },
-            }}
-            InputLabelProps={{
-              shrink: element.type === 'date' ? true : undefined,
-              sx: getLabelSx(isRtl),
-            }}
-            sx={{
-              '& .MuiInputBase-input': { textAlign: isRtl ? 'right' : 'left' },
-            }}
-            fullWidth
-            size="small"
-          />
-        </div>
-      )
-    case 'textarea':
-      return (
-        <TextField
-          id={element.id}
-          name={element.name}
+        <TextInputElement
+          element={element}
           value={typeof value === 'string' ? value : ''}
           label={label}
           placeholder={placeholder}
+          isRtl={isRtl}
+          dir={dir}
+          required={element.required}
+          errorMessage={errorMessage}
           onChange={(event) => onChange(element.name, event.target.value)}
-          multiline
-          minRows={4}
-          inputProps={{
-            dir: isRtl ? 'rtl' : 'ltr',
-            style: { textAlign: isRtl ? 'right' : 'left' },
-          }}
-          InputLabelProps={{ sx: getLabelSx(isRtl) }}
-          sx={{
-            '& .MuiInputBase-input': { textAlign: isRtl ? 'right' : 'left' },
-          }}
-          fullWidth
-          size="small"
+          onBlur={(event) => handleBlur(event.currentTarget.value)}
+        />
+      )
+    case 'textarea':
+      return (
+        <TextareaElement
+          element={element}
+          value={typeof value === 'string' ? value : ''}
+          label={label}
+          placeholder={placeholder}
+          isRtl={isRtl}
+          dir={dir}
+          required={element.required}
+          errorMessage={errorMessage}
+          onChange={(event) => onChange(element.name, event.target.value)}
+          onBlur={(event) => handleBlur(event.currentTarget.value)}
         />
       )
     case 'select':
     case 'dropdown':
       return (
-        <FormControl fullWidth size="small" dir={isRtl ? 'rtl' : 'ltr'}>
-          <InputLabel id={`${element.id}-label`} sx={getLabelSx(isRtl)}>
-            {label}
-          </InputLabel>
-          <Select
-            labelId={`${element.id}-label`}
-            id={element.id}
-            name={element.name}
-            value={typeof value === 'string' ? value : ''}
-            label={label}
-            onChange={(event) => onChange(element.name, event.target.value)}
-            sx={{
-              textAlign: isRtl ? 'right' : 'left',
-              '& .MuiSelect-select': { textAlign: isRtl ? 'right' : 'left' },
-            }}
-          >
-            {element.options?.map((option) => (
-              <MenuItem
-                key={option.value}
-                value={option.value}
-                sx={{ textAlign: isRtl ? 'right' : 'left' }}
-              >
-                {t(option.labelKey)}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+        <SelectElement
+          element={element}
+          value={typeof value === 'string' ? value : ''}
+          label={label}
+          placeholder={placeholder}
+          isRtl={isRtl}
+          dir={dir}
+          onChange={(nextValue) => onChange(element.name, nextValue)}
+          onBlur={() => handleBlur(typeof value === 'string' ? value : '')}
+          required={element.required}
+          errorMessage={errorMessage}
+          renderOptionLabel={renderOptionLabel}
+        />
+      )
+    case 'country':
+      return (
+        <AutocompleteElement
+          element={element}
+          fieldType="country"
+          value={typeof value === 'string' ? value : null}
+          isRtl={isRtl}
+          required={element.required}
+          errorMessage={errorMessage}
+          onValueChange={(name, nextValue) => onChange(name, nextValue ?? '')}
+          onBlur={() => handleBlur()}
+        />
+      )
+    case 'state':
+      return (
+        <AutocompleteElement
+          element={element}
+          fieldType="state"
+          value={typeof value === 'string' ? value : null}
+          countryCode={typeof formData.countryCode === 'string' ? formData.countryCode : null}
+          isRtl={isRtl}
+          required={element.required}
+          errorMessage={errorMessage}
+          onValueChange={(name, nextValue) => onChange(name, nextValue ?? '')}
+          onBlur={() => handleBlur()}
+        />
+      )
+    case 'address':
+      return (
+        <AutocompleteElement
+          element={element}
+          fieldType="address"
+          value={typeof value === 'string' ? value : null}
+          countryCode={typeof formData.countryCode === 'string' ? formData.countryCode : null}
+          isRtl={isRtl}
+          required={element.required}
+          errorMessage={errorMessage}
+          onValueChange={(name, nextValue) => onChange(name, nextValue ?? '')}
+          onBlur={() => handleBlur()}
+        />
       )
     case 'checkbox':
       return (
-        <FormControlLabel
-          control={
-            <Checkbox
-              id={element.id}
-              name={element.name}
-              checked={Boolean(value)}
-              onChange={(event) => onChange(element.name, event.target.checked)}
-            />
-          }
+        <CheckboxElement
+          element={element}
           label={label}
-          sx={{ justifyContent: isRtl ? 'flex-end' : 'flex-start' }}
+          checked={Boolean(value)}
+          isRtl={isRtl}
+          onChange={(event) => onChange(element.name, event.target.checked)}
+          onBlur={() => handleBlur(Boolean(value))}
         />
       )
     case 'radio':
       return (
-        <FormControl component="fieldset" dir={isRtl ? 'rtl' : 'ltr'}>
-          <FormLabel component="legend" sx={getLabelSx(isRtl)}>
-            {label}
-          </FormLabel>
-          <RadioGroup
-            row
-            name={element.name}
-            value={typeof value === 'string' ? value : ''}
-            onChange={(event) => onChange(element.name, event.target.value)}
-            sx={{ justifyContent: isRtl ? 'flex-end' : 'flex-start' }}
-          >
-            {element.options?.map((option) => (
-              <FormControlLabel
-                key={option.value}
-                value={option.value}
-                control={<Radio />}
-                label={t(option.labelKey)}
-              />
-            ))}
-          </RadioGroup>
-        </FormControl>
+        <RadioElement
+          element={element}
+          label={label}
+          value={typeof value === 'string' ? value : ''}
+          isRtl={isRtl}
+          dir={dir}
+          onChange={(event) => onChange(element.name, event.target.value)}
+          onBlur={() => handleBlur(typeof value === 'string' ? value : '')}
+          required={element.required}
+          errorMessage={errorMessage}
+          renderOptionLabel={renderOptionLabel}
+        />
       )
     default:
       return null

@@ -11,6 +11,7 @@ export const formSteps: FormStep[] = [
         name: 'fullName',
         labelKey: 'fields.fullName',
         placeholderKey: 'fields.fullNamePlaceholder',
+        required: true,
       },
       {
         id: 'nationalId',
@@ -20,6 +21,7 @@ export const formSteps: FormStep[] = [
         placeholderKey: 'fields.nationalIdPlaceholder',
         pattern: '\\d{3}-\\d{4}-\\d{7}-\\d',
         inputMode: 'numeric',
+        required: true,
       },
       {
         id: 'dateOfBirth',
@@ -37,10 +39,11 @@ export const formSteps: FormStep[] = [
           { value: 'male', labelKey: 'fields.genderMale' },
           { value: 'other', labelKey: 'fields.genderOther' },
         ],
+        required: true,
       },
       {
         id: 'address',
-        type: 'text',
+        type: 'address',
         name: 'address',
         labelKey: 'fields.address',
         placeholderKey: 'fields.addressPlaceholder',
@@ -52,29 +55,18 @@ export const formSteps: FormStep[] = [
         labelKey: 'fields.city',
       },
       {
-        id: 'country',
-        type: 'dropdown',
-        name: 'country',
-        labelKey: 'fields.country',
-        options: [
-          { value: '', labelKey: 'fields.countryPlaceholder' },
-          { value: 'us', labelKey: 'fields.countryUS' },
-          { value: 'sa', labelKey: 'fields.countrySA' },
-          { value: 'eg', labelKey: 'fields.countryEG' },
-        ],
-      },
-      {
         id: 'state',
-        type: 'dropdown',
+        type: 'state',
         name: 'state',
         labelKey: 'fields.state',
-        options: [
-          { value: '', labelKey: 'fields.statePlaceholder' },
-          { value: 'ca', labelKey: 'fields.stateCA' },
-          { value: 'ny', labelKey: 'fields.stateNY' },
-          { value: 'riyadh', labelKey: 'fields.stateRiyadh' },
-          { value: 'cairo', labelKey: 'fields.stateCairo' },
-        ],
+        placeholderKey: 'fields.statePlaceholder',
+      },
+      {
+        id: 'country',
+        type: 'country',
+        name: 'country',
+        labelKey: 'fields.country',
+        placeholderKey: 'fields.countryPlaceholder',
       },
       {
         id: 'phone',
@@ -83,6 +75,7 @@ export const formSteps: FormStep[] = [
         labelKey: 'fields.phone',
         placeholderKey: 'fields.phonePlaceholder',
         inputMode: 'tel',
+        required: true,
       },
       {
         id: 'email',
@@ -90,6 +83,7 @@ export const formSteps: FormStep[] = [
         name: 'email',
         labelKey: 'fields.email',
         placeholderKey: 'fields.emailPlaceholder',
+        required: true,
       },
     ],
   },

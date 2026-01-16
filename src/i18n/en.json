@@ -1,6 +1,6 @@
 {
   "app": {
-    "title": "Multi-step form",
+    "title": "Social Support Form",
     "language": "Language",
     "step": "Step",
     "back": "Back",
@@ -29,6 +29,7 @@
     "countryUS": "United States",
     "countrySA": "Saudi Arabia",
     "countryEG": "Egypt",
+    "countryAE": "United Arab Emirates",
     "state": "State",
     "statePlaceholder": "Select a state",
     "stateCA": "California",

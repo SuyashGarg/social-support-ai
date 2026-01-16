@@ -1,4 +1,4 @@
-import { Box, Paper, Typography } from '@mui/material'
+import { Box, LinearProgress, Paper, Typography } from '@mui/material'
 import { useTranslation } from 'react-i18next'
 import type { FormStep } from '../../types/form'
 import FormElementField from '../FormElementField'
@@ -10,7 +10,9 @@ type Props = {
   stepIndex: number
   totalSteps: number
   formData: Record<string, string | boolean>
+  formErrors: Record<string, string | null>
   onChange: (name: string, value: string | boolean) => void
+  onBlur: (element: FormStep['elements'][number], value: string | boolean | undefined) => void
   stepLabel: string
 }
 
@@ -20,7 +22,9 @@ export default function FormStepCard({
   totalSteps,
   stepLabel,
   formData,
+  formErrors,
   onChange,
+  onBlur,
 }: Props) {
   const { t } = useTranslation()
   const { isRtl } = useLanguage()
@@ -35,6 +39,12 @@ export default function FormStepCard({
         <Typography variant="body2" sx={styles.stepTitle} aria-live="polite">
           {stepLabel} {stepIndex + 1} / {totalSteps}
         </Typography>
+        <LinearProgress
+          variant="determinate"
+          value={((stepIndex + 1) / totalSteps) * 100}
+          sx={styles.stepProgress}
+          aria-label={`${stepLabel} ${stepIndex + 1} / ${totalSteps}`}
+        />
         <Typography variant="h5" component="h2" id={`step-title-${step.id}`}>
           {t(step.titleKey)}
         </Typography>
@@ -46,7 +56,10 @@ export default function FormStepCard({
             key={element.id}
             element={element}
             value={formData[element.name]}
+            formData={formData}
+            errorMessage={formErrors[element.name]}
             onChange={onChange}
+            onBlur={onBlur}
           />
         ))}
       </Box>

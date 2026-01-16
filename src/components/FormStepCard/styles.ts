@@ -4,7 +4,7 @@ export const formStepCardStyles = {
   formCard: {
     border: `1px solid ${theme.colors.borderMuted}`,
     borderRadius: 16,
-    padding: 14,
+    padding: 10,
     boxShadow: theme.shadows.soft,
   },
   formCardRtl: {
@@ -20,9 +20,18 @@ export const formStepCardStyles = {
     fontWeight: 600,
     color: theme.colors.textMuted,
   },
+  stepProgress: {
+    height: 6,
+    borderRadius: 999,
+    backgroundColor: theme.colors.borderMuted,
+    '& .MuiLinearProgress-bar': {
+      borderRadius: 999,
+      backgroundColor: theme.colors.primary,
+    },
+  },
   formBody: {
     display: 'flex',
     flexDirection: 'column' as const,
-    gap: 10,
+    gap: 3,
   },
 }
