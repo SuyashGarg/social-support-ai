@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { Box, Button, CircularProgress, Paper, Typography } from '@mui/material'
+import { Box, Button, CircularProgress } from '@mui/material'
 import { isValidPhoneNumber } from 'libphonenumber-js'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -16,7 +16,6 @@ type Props = {
   backLabel: string
   nextLabel: string
   submitLabel: string
-  previewLabel: string
 }
 
 export default function MultiStepForm({
@@ -25,7 +24,6 @@ export default function MultiStepForm({
   backLabel,
   nextLabel,
   submitLabel,
-  previewLabel,
 }: Props) {
   const { isRtl } = useLanguage()
   const { t } = useTranslation()

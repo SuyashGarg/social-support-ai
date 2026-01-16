@@ -34,7 +34,6 @@ function App() {
                   backLabel={t('app.back')}
                   nextLabel={t('app.next')}
                   submitLabel={t('app.submit')}
-                  previewLabel={t('app.preview')}
                 />
               }
             />
