@@ -14,6 +14,9 @@ export type ElementType =
   | 'select'
   | 'dropdown'
   | 'id'
+  | 'country'
+  | 'state'
+  | 'address'
 
 export type FormOption = {
   value: string
@@ -28,6 +31,7 @@ export type FormElement = {
   placeholderKey?: TranslationKey
   options?: FormOption[]
   pattern?: string
+  required?: boolean
   inputMode?: 'text' | 'numeric' | 'tel' | 'email'
 }
 

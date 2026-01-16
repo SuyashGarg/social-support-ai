@@ -8,7 +8,7 @@ export const appStyles = {
     padding: '16px 16px 24px',
     display: 'flex',
     flexDirection: 'column' as const,
-    gap: 12,
+    gap: 5,
     color: theme.colors.textPrimary,
   },
   toolbar: {
