@@ -14,6 +14,7 @@ export type TextFieldElementProps = BaseFieldProps & {
     placeholder: string
     onChange: React.ChangeEventHandler<HTMLInputElement>
     onBlur: React.FocusEventHandler<HTMLInputElement>
+    onFocus: React.FocusEventHandler<HTMLInputElement>
 }
 
 export type TextareaFieldElementProps = BaseFieldProps & {

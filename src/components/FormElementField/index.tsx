@@ -1,6 +1,7 @@
+import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { FormElement } from '../../types/form'
-import { getDir } from '../../common/utils'
+import { formatNationalId, getDir } from '../../common/utils'
 import { useLanguage } from '../../context/LanguageContext'
 import TextInputElement from './TextInputElement'
 import TextareaElement from './TextareaElement'
@@ -34,6 +35,18 @@ export default function FormElementField({
   const renderOptionLabel = (labelKey: string) => t(labelKey)
   const handleBlur = (nextValue?: string | boolean) =>
     onBlur?.(element, typeof nextValue === 'undefined' ? value : nextValue)
+  const handleTextFocus = useCallback<React.FocusEventHandler<HTMLInputElement>>(
+    (event) => {
+      if (element.inputMode !== 'numeric') return
+      const target = event.currentTarget
+      window.setTimeout(() => target.select(), 0)
+    },
+    [element.inputMode],
+  )
+  const handleTextInputChange = (nextValue: string) => {
+    const formatted = element.type === 'id' ? formatNationalId(nextValue) : nextValue
+    onChange(element.name, formatted)
+  }
 
   switch (element.type) {
     case 'text':
@@ -52,8 +65,9 @@ export default function FormElementField({
           dir={dir}
           required={element.required}
           errorMessage={errorMessage}
-          onChange={(event) => onChange(element.name, event.target.value)}
+          onChange={(event) => handleTextInputChange(event.target.value)}
           onBlur={(event) => handleBlur(event.currentTarget.value)}
+          onFocus={handleTextFocus}
         />
       )
     case 'textarea':

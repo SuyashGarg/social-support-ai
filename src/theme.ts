@@ -11,6 +11,7 @@ export const theme = {
     borderMuted: '#e5e7eb',
     primary: '#111827',
     onPrimary: '#ffffff',
+    success: '#16a34a',
     disabledBackground: '#d1d5db',
     disabledText: '#4b5563',
   },
