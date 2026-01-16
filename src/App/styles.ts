@@ -34,6 +34,15 @@ export const appStyles = {
     display: 'flex',
     flexDirection: 'column' as const,
     gap: 5,
+    color: theme.colors.textPrimary,
+  },
+  toolbar: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: 16,
+    flexWrap: 'wrap' as const,
+    width: '100%',
   },
   toolbarRtl: {
     flexDirection: { xs: 'column', sm: 'row-reverse' } as const,
