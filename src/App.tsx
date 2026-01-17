@@ -1,46 +1,22 @@
-import { Box, Container, Typography } from '@mui/material'
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
-import { useTranslation } from 'react-i18next'
-import MultiStepForm from './components/MultiStepForm'
-import ReviewPage from './components/ReviewPage/ReviewPage'
-import { useLanguage } from './context/LanguageContext'
-import { formSteps } from './data/formMock'
+import { Box } from '@mui/material'
+import { BrowserRouter } from 'react-router-dom'
+import { LanguageProvider } from './context/LanguageContext'
 import { appStyles } from './App/styles'
 import PageHeader from './components/PageHeader'
+import AppThemeProvider from './providers/AppThemeProvider'
+import ContentContainer from './components/ContentContainer'
 
 function App() {
-  const { language } = useLanguage()
-  const { t } = useTranslation()
-  const dir = language === 'ar' ? 'rtl' : 'ltr'
-
   return (
     <BrowserRouter>
-      <Box sx={appStyles.page} dir={dir} lang={language}>
-        <PageHeader />
-
-        <Container disableGutters sx={appStyles.main}>
-          <Typography component="h2" sx={appStyles.sectionTitle}>
-            {t('app.submitRequestTitle')}
-          </Typography>
-
-          <Routes>
-            <Route path="/" element={<Navigate to="/step/0" replace />} />
-            <Route
-              path="/step/:stepIndex"
-              element={
-                <MultiStepForm
-                  steps={formSteps}
-                  stepLabel={t('app.step')}
-                  backLabel={t('app.back')}
-                  nextLabel={t('app.next')}
-                  submitLabel={t('app.submit')}
-                />
-              }
-            />
-            <Route path="/review" element={<ReviewPage />} />
-          </Routes>
-        </Container>
-      </Box>
+      <LanguageProvider>
+        <Box sx={appStyles.page}>
+          <PageHeader />
+          <AppThemeProvider>
+            <ContentContainer />
+          </AppThemeProvider>
+        </Box>
+      </LanguageProvider>
     </BrowserRouter>
   )
 }

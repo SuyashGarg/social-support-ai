@@ -5,12 +5,11 @@ type Props = {
     element: FormElement
     label: string
     checked: boolean
-    isRtl: boolean
     onChange: React.ChangeEventHandler<HTMLInputElement>
     onBlur: React.FocusEventHandler<HTMLButtonElement>
 }
 
-export default function CheckboxElement({ element, label, checked, isRtl, onChange, onBlur }: Props) {
+export default function CheckboxElement({ element, label, checked, onChange, onBlur }: Props) {
     return (
         <FormControlLabel
             control={
@@ -23,7 +22,6 @@ export default function CheckboxElement({ element, label, checked, isRtl, onChan
                 />
             }
             label={label}
-            sx={{ justifyContent: isRtl ? 'flex-end' : 'flex-start' }}
         />
     )
 }

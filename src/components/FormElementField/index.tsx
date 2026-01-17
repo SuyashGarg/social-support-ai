@@ -1,8 +1,7 @@
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { FormElement } from '../../types/form'
-import { formatNationalId, getDir } from '../../common/utils'
-import { useLanguage } from '../../context/LanguageContext'
+import { formatNationalId } from '../../common/utils'
 import TextInputElement from './TextInputElement'
 import TextareaElement from './TextareaElement'
 import TextareaAssistElement from './TextareaAssistElement'
@@ -10,6 +9,7 @@ import SelectElement from './SelectElement'
 import CheckboxElement from './CheckboxElement'
 import RadioElement from './RadioElement'
 import AutocompleteElement from './AutocompleteElement'
+import { useLanguage } from '../../context/LanguageContext'
 
 type Props = {
   element: FormElement
@@ -28,19 +28,18 @@ export default function FormElementField({
   onChange,
   onBlur,
 }: Props) {
-  const { t } = useTranslation()
-  const { isRtl } = useLanguage()
-  const label = t(element.labelKey)
-  const placeholder = element.placeholderKey ? t(element.placeholderKey) : ''
-  const dir = getDir(isRtl)
-  const renderOptionLabel = (labelKey: string) => t(labelKey)
+  const { t } = useTranslation();
+  const { isRtl } = useLanguage();
+  const label = t(element.labelKey);
+  const placeholder = element.placeholderKey ? t(element.placeholderKey) : '';
+  const renderOptionLabel = (labelKey: string) => t(labelKey);
   const handleBlur = (nextValue?: string | boolean) =>
-    onBlur?.(element, typeof nextValue === 'undefined' ? value : nextValue)
+    onBlur?.(element, typeof nextValue === 'undefined' ? value : nextValue);
   const handleTextFocus = useCallback<React.FocusEventHandler<HTMLInputElement>>(
     (event) => {
-      if (element.inputMode !== 'numeric') return
-      const target = event.currentTarget
-      window.setTimeout(() => target.select(), 0)
+      if (element.inputMode !== 'numeric') return;
+      const target = event.currentTarget;
+      window.setTimeout(() => target.select(), 0);
     },
     [element.inputMode],
   )
@@ -75,7 +74,6 @@ export default function FormElementField({
           label={label}
           placeholder={placeholder}
           isRtl={isRtl}
-          dir={dir}
           required={element.required}
           errorMessage={errorMessage}
           onChange={(event) => handleTextInputChange(event.target.value)}
@@ -90,8 +88,6 @@ export default function FormElementField({
           value={typeof value === 'string' ? value : ''}
           label={label}
           placeholder={placeholder}
-          isRtl={isRtl}
-          dir={dir}
           required={element.required}
           errorMessage={errorMessage}
           onValueChange={handleTextareaValueChange}
@@ -103,8 +99,6 @@ export default function FormElementField({
           value={typeof value === 'string' ? value : ''}
           label={label}
           placeholder={placeholder}
-          isRtl={isRtl}
-          dir={dir}
           required={element.required}
           errorMessage={errorMessage}
           onChange={handleTextareaChange}
@@ -119,8 +113,6 @@ export default function FormElementField({
           value={typeof value === 'string' ? value : ''}
           label={label}
           placeholder={placeholder}
-          isRtl={isRtl}
-          dir={dir}
           onChange={(nextValue) => onChange(element.name, nextValue)}
           onBlur={() => handleBlur(typeof value === 'string' ? value : '')}
           required={element.required}
@@ -134,7 +126,6 @@ export default function FormElementField({
           element={element}
           fieldType="country"
           value={typeof value === 'string' ? value : null}
-          isRtl={isRtl}
           required={element.required}
           errorMessage={errorMessage}
           onValueChange={(name, nextValue) => onChange(name, nextValue ?? '')}
@@ -148,7 +139,6 @@ export default function FormElementField({
           fieldType="state"
           value={typeof value === 'string' ? value : null}
           countryCode={typeof formData.countryCode === 'string' ? formData.countryCode : null}
-          isRtl={isRtl}
           required={element.required}
           errorMessage={errorMessage}
           onValueChange={(name, nextValue) => onChange(name, nextValue ?? '')}
@@ -162,7 +152,6 @@ export default function FormElementField({
           fieldType="address"
           value={typeof value === 'string' ? value : null}
           countryCode={typeof formData.countryCode === 'string' ? formData.countryCode : null}
-          isRtl={isRtl}
           required={element.required}
           errorMessage={errorMessage}
           onValueChange={(name, nextValue) => onChange(name, nextValue ?? '')}
@@ -175,7 +164,6 @@ export default function FormElementField({
           element={element}
           label={label}
           checked={Boolean(value)}
-          isRtl={isRtl}
           onChange={(event) => onChange(element.name, event.target.checked)}
           onBlur={() => handleBlur(Boolean(value))}
         />
@@ -186,8 +174,6 @@ export default function FormElementField({
           element={element}
           label={label}
           value={typeof value === 'string' ? value : ''}
-          isRtl={isRtl}
-          dir={dir}
           onChange={(event) => onChange(element.name, event.target.value)}
           onBlur={() => handleBlur(typeof value === 'string' ? value : '')}
           required={element.required}

@@ -4,11 +4,10 @@ export const textareaAssistStyles = {
         flexDirection: 'column' as const,
         gap: 1,
     },
-    buttonRow: (isRtl: boolean) => ({
+    buttonRow: {
         display: 'flex',
         justifyContent: 'flex-end',
-        direction: isRtl ? 'rtl' : 'ltr',
-    }),
+    },
     helpButton: {
         cursor: 'pointer',
     },

@@ -3,8 +3,6 @@ import type { FormElement } from '../../types/form'
 export type BaseFieldProps = {
     element: FormElement
     label: string
-    isRtl: boolean
-    dir: string
     required?: boolean
     errorMessage?: string | null
 }
@@ -12,6 +10,7 @@ export type BaseFieldProps = {
 export type TextFieldElementProps = BaseFieldProps & {
     value: string
     placeholder: string
+    isRtl: boolean
     onChange: React.ChangeEventHandler<HTMLInputElement>
     onBlur: React.FocusEventHandler<HTMLInputElement>
     onFocus: React.FocusEventHandler<HTMLInputElement>

@@ -69,6 +69,7 @@ export const appStyles = {
     alignItems: 'center',
     gap: 2,
     minWidth: 0,
+    cursor: 'pointer',
   },
   logo: {
     width: 64,

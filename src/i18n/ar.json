@@ -17,7 +17,20 @@
     "accept": "اعتماد",
     "discard": "تجاهل",
     "suggestion": "اقتراح",
-    "generating": "جارٍ الإنشاء..."
+    "generating": "جارٍ الإنشاء...",
+    "profile": "الملف الشخصي",
+    "history": "السجل",
+    "logout": "تسجيل الخروج",
+    "noHistory": "لا يوجد سجل.",
+    "serialNo": "الرقم",
+    "name": "الاسم",
+    "email": "البريد الإلكتروني"
+  },
+  "validation": {
+    "required": "مطلوب",
+    "invalidEmail": "بريد إلكتروني غير صحيح",
+    "invalidPhone": "رقم هاتف غير صحيح",
+    "invalidDocumentNumber": "رقم وثيقة غير صحيح"
   },
   "steps": {
     "profile": "المعلومات الشخصية",
@@ -31,6 +44,7 @@
       "nationalId": "الرقم الوطني",
       "nationalIdPlaceholder": "123-4567-1234567-1",
       "dateOfBirth": "تاريخ الميلاد",
+      "dateOfBirthPlaceholder": "يوم/شهر/سنة",
       "gender": "الجنس",
       "genderFemale": "أنثى",
       "genderMale": "ذكر",

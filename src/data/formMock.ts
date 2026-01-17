@@ -28,6 +28,8 @@ export const formSteps: FormStep[] = [
         type: 'date',
         name: 'dateOfBirth',
         labelKey: 'fields.profile.dateOfBirth',
+        placeholderKey: 'fields.profile.dateOfBirthPlaceholder',
+        allowFuture: false,
       },
       {
         id: 'gender',

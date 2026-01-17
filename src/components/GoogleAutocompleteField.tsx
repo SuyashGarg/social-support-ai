@@ -5,8 +5,6 @@ import type { RowComponentProps } from 'react-window'
 import { useTranslation } from 'react-i18next'
 import { loadGoogleMaps } from '../google/loader'
 import { LISTBOX_PADDING } from '../common/constants'
-import { getDir, getTextAlign } from '../common/utils'
-import { getLabelSx } from '../common/styles'
 
 type Option = {
     description: string
@@ -29,7 +27,6 @@ type Props = {
     onBlur?: () => void
     onValueChange: (name: string, value: string | null) => void
     onMetaChange?: (meta: Record<string, string | null>) => void
-    isRtl: boolean
 }
 
 const getCountryCodeFromPlace = (place?: google.maps.places.PlaceResult | null) => {
@@ -71,7 +68,6 @@ export default function GoogleAutocompleteField({
     onBlur,
     onValueChange,
     onMetaChange,
-    isRtl,
 }: Props) {
     const { t } = useTranslation()
     const [options, setOptions] = useState<Option[]>([])
@@ -208,18 +204,13 @@ export default function GoogleAutocompleteField({
                     inputLabel: {
                         ...params.InputLabelProps,
                         required,
-                        sx: getLabelSx(isRtl),
-                    },
-                    htmlInput: {
-                        ...params.inputProps,
-                        dir: getDir(isRtl),
                     },
                 }}
                 size="small"
                 fullWidth
             />
         ),
-        [isRtl, labelKey, placeholderKey, required, t],
+        [errorMessage, labelKey, placeholderKey, required, t],
     )
 
     const ListboxComponent = useMemo(() => {
@@ -282,9 +273,6 @@ export default function GoogleAutocompleteField({
             onInputChange={handleInputChange}
             filterOptions={(x) => x}
             slots={{ listbox: ListboxComponent }}
-            sx={{
-                '& .MuiInputBase-input': { textAlign: getTextAlign(isRtl) },
-            }}
             renderInput={renderInput}
         />
     )

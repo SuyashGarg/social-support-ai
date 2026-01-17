@@ -5,13 +5,11 @@ export const multiStepFormStyles = {
     gap: 8,
     marginTop: 12,
   },
-  formActionsRtl: {
-    flexDirection: 'row-reverse' as const,
-  },
   button: {
     padding: '7px 12px',
     fontWeight: 600,
     cursor: 'pointer',
+    gap: 1,
   },
   buttonDisabled: {
     cursor: 'not-allowed',
