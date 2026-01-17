@@ -9,6 +9,7 @@ import SelectElement from './SelectElement'
 import CheckboxElement from './CheckboxElement'
 import RadioElement from './RadioElement'
 import AutocompleteElement from './AutocompleteElement'
+import DatePickerElement from './DatePickerElement'
 import { useLanguage } from '../../context/LanguageContext'
 
 type Props = {
@@ -61,9 +62,22 @@ export default function FormElementField({
   )
 
   switch (element.type) {
+    case 'date':
+      return (
+        <DatePickerElement
+          element={element}
+          value={typeof value === 'string' ? value : ''}
+          label={label}
+          placeholder={placeholder}
+          isRtl={isRtl}
+          required={element.required}
+          errorMessage={errorMessage}
+          onChange={(nextValue) => onChange(element.name, nextValue)}
+          onBlur={() => handleBlur(typeof value === 'string' ? value : '')}
+        />
+      )
     case 'text':
     case 'email':
-    case 'date':
     case 'tel':
     case 'phone':
     case 'id':

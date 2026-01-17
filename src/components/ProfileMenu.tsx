@@ -27,8 +27,9 @@ export default function ProfileMenu() {
     }, [handleMenuClose, navigate])
 
     const handleLogoutClick = useCallback(() => {
-        clearHistory()
-        handleMenuClose()
+        clearHistory();
+        handleMenuClose();
+        navigate('/')
     }, [handleMenuClose])
 
     return (
