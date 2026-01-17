@@ -6,7 +6,6 @@ import { useTranslation } from 'react-i18next'
 import { loadGoogleMaps } from '../../google/loader'
 import { LISTBOX_PADDING } from '../../common/constants'
 import { getDir, getTextAlign } from '../../common/utils'
-import { getLabelSx } from '../../common/styles'
 
 type Option = {
     description: string
@@ -208,7 +207,6 @@ export default function GoogleAutocompleteField({
                     inputLabel: {
                         ...params.InputLabelProps,
                         required,
-                        sx: getLabelSx(isRtl),
                     },
                     htmlInput: {
                         ...params.inputProps,
