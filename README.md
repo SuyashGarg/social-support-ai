@@ -27,17 +27,17 @@ yarn install
 
 ### For Local Development
 
-1. Create a `.env.local` file in the root directory:
+1. Create a `.env` file in the root directory:
 ```bash
-touch .env.local
+touch .env
 ```
 
-2. Add your OpenAI API key to `.env.local`:
+2. Add your OpenAI API key to `.env`:
 ```env
 OPENAI_API_KEY=your-openai-api-key-here
 ```
 
-**Important:** Never commit your `.env.local` file to version control. It should already be in `.gitignore`.
+**Important:** Never commit your `.env` file to version control. It should already be in `.gitignore`.
 
 ### For Vercel Deployment
 
@@ -54,10 +54,10 @@ yarn global add vercel
 
 2. Pull environment variables from your Vercel project:
 ```bash
-npx vercel env pull .env.local
+npx vercel env pull .env
 ```
 
-This will download environment variables from your Vercel project and create a `.env.local` file.
+This will download environment variables from your Vercel project and create a `.env` file.
 
 #### Option 2: Using Vercel Dashboard
 
@@ -136,7 +136,7 @@ If you don't have an OpenAI API key yet:
 
 ### OpenAI API Key Not Working
 
-- Ensure the API key is correctly set in your `.env.local` file (for local) or Vercel environment variables (for deployment)
+- Ensure the API key is correctly set in your `.env` file (for local) or Vercel environment variables (for deployment)
 - Verify the API key is valid and has sufficient credits
 - Check that the environment variable name is exactly `OPENAI_API_KEY` (case-sensitive)
 - For Vercel deployments, make sure you've redeployed after adding the environment variable
