@@ -7,7 +7,7 @@ export const reviewPageStyles = {
         md: 16,
     },
     container: {
-        padding: 8,
+        padding: { xs: 2, md: 8 },
     },
     content: {
         display: 'flex',

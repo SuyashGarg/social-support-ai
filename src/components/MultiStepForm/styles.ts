@@ -3,7 +3,7 @@ export const multiStepFormStyles = {
     display: 'flex',
     justifyContent: 'space-between',
     gap: 8,
-    marginTop: 12,
+    marginTop: 2,
   },
   button: {
     padding: '7px 12px',

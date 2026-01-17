@@ -12,6 +12,7 @@ type Props = {
   formData: Record<string, string | boolean>
   formErrors: Record<string, string | null>
   onChange: (name: string, value: string | boolean) => void
+  onMetaChange?: (name: string, meta: Record<string, string | null>) => void
   onBlur: (element: FormStep['elements'][number], value: string | boolean | undefined) => void
   stepLabel: string
 }
@@ -24,6 +25,7 @@ export default function FormStepCard({
   formData,
   formErrors,
   onChange,
+  onMetaChange,
   onBlur,
 }: Props) {
   const { t } = useTranslation()
@@ -75,6 +77,7 @@ export default function FormStepCard({
             formData={formData}
             errorMessage={formErrors[element.name]}
             onChange={onChange}
+            onMetaChange={onMetaChange}
             onBlur={onBlur}
           />
         ))}

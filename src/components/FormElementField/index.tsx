@@ -18,6 +18,7 @@ type Props = {
   formData: Record<string, string | boolean>
   errorMessage?: string | null
   onChange: (name: string, value: string | boolean) => void
+  onMetaChange?: (name: string, meta: Record<string, string | null>) => void
   onBlur?: (element: FormElement, value: string | boolean | undefined) => void
 }
 
@@ -27,6 +28,7 @@ export default function FormElementField({
   formData,
   errorMessage,
   onChange,
+  onMetaChange,
   onBlur,
 }: Props) {
   const { t } = useTranslation();
@@ -135,40 +137,22 @@ export default function FormElementField({
         />
       )
     case 'country':
-      return (
-        <AutocompleteElement
-          element={element}
-          fieldType="country"
-          value={typeof value === 'string' ? value : null}
-          required={element.required}
-          errorMessage={errorMessage}
-          onValueChange={(name, nextValue) => onChange(name, nextValue ?? '')}
-          onBlur={() => handleBlur()}
-        />
-      )
     case 'state':
-      return (
-        <AutocompleteElement
-          element={element}
-          fieldType="state"
-          value={typeof value === 'string' ? value : null}
-          countryCode={typeof formData.countryCode === 'string' ? formData.countryCode : null}
-          required={element.required}
-          errorMessage={errorMessage}
-          onValueChange={(name, nextValue) => onChange(name, nextValue ?? '')}
-          onBlur={() => handleBlur()}
-        />
-      )
     case 'address':
       return (
         <AutocompleteElement
           element={element}
-          fieldType="address"
+          fieldType={element.type as 'country' | 'state' | 'address'}
           value={typeof value === 'string' ? value : null}
-          countryCode={typeof formData.countryCode === 'string' ? formData.countryCode : null}
+          countryCode={
+            (element.type === 'state' || element.type === 'address') && typeof formData.countryCode === 'string'
+              ? formData.countryCode
+              : null
+          }
           required={element.required}
           errorMessage={errorMessage}
           onValueChange={(name, nextValue) => onChange(name, nextValue ?? '')}
+          onMetaChange={(meta) => onMetaChange?.(element.name, meta)}
           onBlur={() => handleBlur()}
         />
       )

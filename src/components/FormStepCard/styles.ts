@@ -4,14 +4,14 @@ export const formStepCardStyles = {
   formCard: {
     border: `1px solid ${theme.colors.borderMuted}`,
     borderRadius: 6,
-    padding: 10,
+    padding: { xs: 2, md: 10 },
     boxShadow: theme.shadows.soft,
   },
   stepHeader: {
     display: 'flex',
     flexDirection: 'column' as const,
     gap: 2,
-    marginBottom: 10,
+    marginBottom: { xs: 3, md: 10 },
   },
   stepHeaderRtl: {
     alignItems: 'flex-end',
@@ -35,6 +35,6 @@ export const formStepCardStyles = {
   formBody: {
     display: 'flex',
     flexDirection: 'column' as const,
-    gap: 3,
+    gap: { xs: 0.5, md: 3 },
   },
 }

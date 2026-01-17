@@ -16,13 +16,22 @@ export default function LanguageSwitch() {
       gap={1}
       dir="ltr"
     >
-      <Typography variant="body2" fontWeight={600}>
+      <Typography
+        variant="body2"
+        fontWeight={600}
+        sx={{ display: { xs: 'none', md: 'block' } }}
+      >
         {LABEL}
       </Typography>
       <ButtonGroup size="small" aria-label={LABEL}>
         <Button
           variant={language === 'en' ? 'contained' : 'outlined'}
-          sx={{ backgroundColor: language === 'en' ? theme.colors.primary : 'transparent', borderColor: theme.colors.primary, color: language === 'en' ? theme.colors.surface : theme.colors.textPrimary }}
+          sx={{
+            backgroundColor: language === 'en' ? theme.colors.primary : 'transparent',
+            borderColor: theme.colors.primary,
+            color: language === 'en' ? theme.colors.surface : theme.colors.textPrimary,
+            fontSize: { xs: '0.6rem', md: '1rem' }
+          }}
           onClick={() => setLanguage('en')}
           aria-pressed={language === 'en'}
         >
@@ -30,7 +39,12 @@ export default function LanguageSwitch() {
         </Button>
         <Button
           variant={language === 'ar' ? 'contained' : 'outlined'}
-          sx={{ backgroundColor: language === 'ar' ? theme.colors.primary : 'transparent', borderColor: theme.colors.primary, color: language === 'ar' ? theme.colors.surface : theme.colors.textPrimary }}
+          sx={{
+            backgroundColor: language === 'ar' ? theme.colors.primary : 'transparent',
+            borderColor: theme.colors.primary,
+            color: language === 'ar' ? theme.colors.surface : theme.colors.textPrimary,
+            fontSize: { xs: '0.6rem', md: '1rem' }
+          }}
           onClick={() => setLanguage('ar')}
           aria-pressed={language === 'ar'}
         >

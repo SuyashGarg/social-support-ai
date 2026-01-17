@@ -15,7 +15,7 @@ export default function PageHeader() {
                 maxWidth={false}
                 sx={appStyles.headerInner}
             >
-                <Box sx={appStyles.brand} onClick={() => navigate('/')}>
+                <Box sx={{ ...appStyles.brand, width: { xs: '50%', md: 'auto' } }} onClick={() => navigate('/')}>
                     <Box component="img" src={logo} alt="Social Support logo" sx={appStyles.logo} />
                     <Typography component="h1" sx={appStyles.title}>
                         Social Support

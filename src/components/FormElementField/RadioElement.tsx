@@ -24,7 +24,7 @@ export default function RadioElement({
 }: Props) {
     return (
         <FormControl component="fieldset" required={required} error={Boolean(errorMessage)}>
-            <FormLabel component="legend" required={required}>
+            <FormLabel component="legend" required={required} sx={{ fontSize: { xs: '0.8rem', md: '1rem' } }}>
                 {label}
             </FormLabel>
             <RadioGroup
@@ -40,6 +40,7 @@ export default function RadioElement({
                         value={option.value}
                         control={<Radio />}
                         label={renderOptionLabel(option.labelKey)}
+                        sx={{ fontSize: { xs: '0.75rem', md: '0.875rem' } }}
                     />
                 ))}
             </RadioGroup>

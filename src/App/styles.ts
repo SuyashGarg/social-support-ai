@@ -23,7 +23,7 @@ export const appStyles = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
-    gap: 16,
+    gap: 4,
     flexWrap: 'wrap' as const,
   },
   main: {
@@ -33,7 +33,7 @@ export const appStyles = {
     padding: '16px 16px 24px',
     display: 'flex',
     flexDirection: 'column' as const,
-    gap: 5,
+    gap: { xs: 1, md: 5 },
     color: theme.colors.textPrimary,
   },
   toolbar: {
@@ -51,7 +51,7 @@ export const appStyles = {
   },
   title: {
     margin: 0,
-    fontSize: '1.5rem',
+    fontSize: { xs: '1rem', md: '1.5rem' },
     fontWeight: 700,
     whiteSpace: 'nowrap' as const,
     overflow: 'hidden',
@@ -72,8 +72,8 @@ export const appStyles = {
     cursor: 'pointer',
   },
   logo: {
-    width: 64,
-    height: 64,
+    width: { xs: 24, md: 64 },
+    height: { xs: 24, md: 64 },
     borderRadius: 6,
     objectFit: 'contain' as const,
   },

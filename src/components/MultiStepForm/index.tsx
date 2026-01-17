@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Box, Button, CircularProgress } from '@mui/material'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
@@ -43,6 +43,7 @@ export default function MultiStepForm({
   });
   const [formErrors, setFormErrors] = useState<Record<string, string | null>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const prevCountryCodeRef = useRef<string | boolean | undefined>(undefined);
 
   const stepIndex = useMemo(() => {
     const parsed = Number(stepParam)
@@ -81,6 +82,26 @@ export default function MultiStepForm({
     window.localStorage.setItem('socialSupportFormData', JSON.stringify(formData))
   }, [formData])
 
+  // Clear state and address when countryCode changes
+  useEffect(() => {
+    const currentCountryCode = formData.countryCode
+    const prevCountryCode = prevCountryCodeRef.current
+
+    if (currentCountryCode !== prevCountryCode && currentCountryCode !== undefined && prevCountryCode !== undefined) {
+      setFormData((prev) => ({
+        ...prev,
+        state: '',
+        stateCode: '',
+        statePlaceId: '',
+        address: '',
+        addressPlaceId: '',
+        city: '',
+      }))
+    }
+
+    prevCountryCodeRef.current = currentCountryCode
+  }, [formData.countryCode])
+
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }, [stepIndex])
@@ -99,8 +120,77 @@ export default function MultiStepForm({
   }, [formData, navigate, stepIndex]);
 
   const handleChange = useCallback((name: string, value: string | boolean) => {
-    setFormData((prev) => ({ ...prev, [name]: value }));
-    setFormErrors((prev) => (prev[name] ? { ...prev, [name]: null } : prev));
+    setFormData((prev) => {
+      const next = { ...prev, [name]: value };
+      debugger;
+
+      // When country changes, clear state and address fields
+      if (name === 'country') {
+        // Clear state field and related metadata
+        next.state = '';
+        next.stateCode = '';
+        next.statePlaceId = '';
+
+        // Clear address field and related metadata
+        next.address = '';
+        next.addressPlaceId = '';
+        next.city = '';
+      }
+
+      return next;
+    });
+    setFormErrors((prev) => {
+      const next = prev[name] ? { ...prev, [name]: null } : prev;
+
+      // Clear errors for state and address when country changes
+      if (name === 'country') {
+        if (prev.state) next.state = null;
+        if (prev.address) next.address = null;
+      }
+
+      return next;
+    });
+  }, []);
+
+  const handleMetaChange = useCallback((name: string, meta: Record<string, string | null>) => {
+    setFormData((prev) => {
+      const next = { ...prev };
+
+      // Update metadata fields based on field type
+      if (name === 'country') {
+        next.countryCode = meta.countryCode ?? '';
+        next.countryPlaceId = meta.placeId ?? '';
+
+        // When country metadata changes (countryCode updates), clear state and address
+        if (meta.countryCode !== prev.countryCode) {
+          next.state = '';
+          next.stateCode = '';
+          next.statePlaceId = '';
+          next.address = '';
+          next.addressPlaceId = '';
+          next.city = '';
+        }
+      } else if (name === 'state') {
+        next.stateCode = meta.stateCode ?? '';
+        next.statePlaceId = meta.placeId ?? '';
+      } else if (name === 'address') {
+        next.addressPlaceId = meta.placeId ?? '';
+
+        // Populate city and state fields if available from address
+        if (meta.city) {
+          next.city = meta.city;
+        }
+        if (meta.state) {
+          next.state = meta.state;
+          // Also update state metadata if stateCode is available
+          if (meta.stateCode) {
+            next.stateCode = meta.stateCode;
+          }
+        }
+      }
+
+      return next;
+    });
   }, []);
 
   const validateField = useCallback((name: string, value: string | boolean | undefined, required?: boolean) => {
@@ -240,6 +330,7 @@ export default function MultiStepForm({
         formData={formData}
         formErrors={formErrors}
         onChange={handleChange}
+        onMetaChange={handleMetaChange}
         onBlur={handleFieldBlur}
         stepLabel={stepLabel}
       />

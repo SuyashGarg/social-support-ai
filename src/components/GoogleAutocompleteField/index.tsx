@@ -47,6 +47,59 @@ const getAdminAreaFromPlace = (place?: google.maps.places.PlaceResult | null) =>
     return state?.short_name ?? null
 }
 
+const getCityFromPlace = (place?: google.maps.places.PlaceResult | null) => {
+    // Try different city types in order of preference
+    const cityTypes = [
+        'locality', // City name
+        'administrative_area_level_2', // County/City level
+        'administrative_area_level_3', // Sub-county level
+    ]
+
+    for (const type of cityTypes) {
+        const city = place?.address_components?.find(
+            (component: google.maps.GeocoderAddressComponent) =>
+                component.types.includes(type),
+        )
+        if (city) {
+            return city.long_name ?? null
+        }
+    }
+
+    return null
+}
+
+const getStateNameFromPlace = (place?: google.maps.places.PlaceResult | null) => {
+    const state = place?.address_components?.find(
+        (component: google.maps.GeocoderAddressComponent) =>
+            component.types.includes('administrative_area_level_1'),
+    )
+    return state?.long_name ?? null
+}
+
+const getStreetAddressFromPlace = (place?: google.maps.places.PlaceResult | null) => {
+    if (!place?.address_components) return null
+
+    const streetNumber = place.address_components.find(
+        (component: google.maps.GeocoderAddressComponent) =>
+            component.types.includes('street_number'),
+    )
+
+    const route = place.address_components.find(
+        (component: google.maps.GeocoderAddressComponent) =>
+            component.types.includes('route'),
+    )
+
+    const parts: string[] = []
+    if (streetNumber?.long_name) {
+        parts.push(streetNumber.long_name)
+    }
+    if (route?.long_name) {
+        parts.push(route.long_name)
+    }
+
+    return parts.length > 0 ? parts.join(' ') : null
+}
+
 const filterPrediction = (option: Option, fieldType: FieldType) => {
     if (fieldType === 'country') {
         return option.types.includes('country')
@@ -137,9 +190,9 @@ export default function GoogleAutocompleteField({
     }, [inputValue, fieldType, countryCode])
 
     const handleSelect = useCallback((option: Option | null) => {
-        onValueChange(name, option?.description ?? null)
         const service = placesService.current
         if (!option || !service) {
+            onValueChange(name, null)
             onMetaChange?.({
                 countryCode: null,
                 stateCode: null,
@@ -150,18 +203,37 @@ export default function GoogleAutocompleteField({
             return
         }
 
+        // For address fields, wait for place details to get street address
+        // For other fields, use description immediately
+        if (fieldType !== 'address') {
+            onValueChange(name, option.description ?? null)
+        }
+
         service.getDetails(
             { placeId: option.placeId, fields: ['address_components'] },
             (place: google.maps.places.PlaceResult | null) => {
                 if (!mounted.current) return
-                onMetaChange?.({
+
+                const meta: Record<string, string | null> = {
                     countryCode: getCountryCodeFromPlace(place),
                     stateCode: getAdminAreaFromPlace(place),
                     placeId: option.placeId,
-                })
+                }
+
+                // For address fields, extract street address, city and state names
+                if (fieldType === 'address') {
+                    const streetAddress = getStreetAddressFromPlace(place)
+                    // Use street address if available, otherwise fall back to description
+                    const addressValue = streetAddress ?? option.description ?? null
+                    onValueChange(name, addressValue)
+                    meta.city = getCityFromPlace(place)
+                    meta.state = getStateNameFromPlace(place)
+                }
+
+                onMetaChange?.(meta)
             },
         )
-    }, [name, onMetaChange, onValueChange])
+    }, [name, fieldType, onMetaChange, onValueChange])
 
     const getOptionLabel = useCallback(
         (option: string | Option) => (typeof option === 'string' ? option : option.description),
