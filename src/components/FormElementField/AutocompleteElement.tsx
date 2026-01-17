@@ -6,7 +6,6 @@ type Props = {
     fieldType: 'country' | 'state' | 'address'
     value: string | null
     countryCode?: string | null
-    isRtl: boolean
     required?: boolean
     errorMessage?: string | null
     onValueChange: (name: string, nextValue: string | null) => void
@@ -19,7 +18,6 @@ export default function AutocompleteElement({
     fieldType,
     value,
     countryCode,
-    isRtl,
     required,
     errorMessage,
     onValueChange,
@@ -39,7 +37,6 @@ export default function AutocompleteElement({
             errorMessage={errorMessage}
             onValueChange={onValueChange}
             onMetaChange={onMetaChange}
-            isRtl={isRtl}
             onBlur={onBlur}
         />
     )

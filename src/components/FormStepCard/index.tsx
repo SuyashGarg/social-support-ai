@@ -33,19 +33,35 @@ export default function FormStepCard({
     <Paper
       component="section"
       elevation={0}
-      sx={{ ...styles.formCard, ...(isRtl ? styles.formCardRtl : {}) }}
+      sx={styles.formCard}
     >
-      <Box sx={styles.stepHeader}>
-        <Typography variant="body2" sx={styles.stepTitle} aria-live="polite">
+      <Box sx={{ ...styles.stepHeader, ...(isRtl ? styles.stepHeaderRtl : {}) }}>
+        <Typography
+          variant="body2"
+          sx={{ ...styles.stepTitle, textAlign: 'start', width: '100%' }}
+          aria-live="polite"
+        >
           {stepLabel} {stepIndex + 1} / {totalSteps}
         </Typography>
         <LinearProgress
           variant="determinate"
           value={((stepIndex + 1) / totalSteps) * 100}
-          sx={styles.stepProgress}
+          sx={{
+            ...styles.stepProgress,
+            width: '100%',
+            '& .MuiLinearProgress-bar': {
+              ...styles.stepProgress['& .MuiLinearProgress-bar'],
+              transformOrigin: isRtl ? 'right' : 'left',
+            },
+          }}
           aria-label={`${stepLabel} ${stepIndex + 1} / ${totalSteps}`}
         />
-        <Typography variant="h5" component="h2" id={`step-title-${step.id}`}>
+        <Typography
+          variant="h5"
+          component="h2"
+          sx={{ ...styles.sectionTitle, textAlign: 'start', width: '100%' }}
+          id={`step-title-${step.id}`}
+        >
           {t(step.titleKey)}
         </Typography>
       </Box>

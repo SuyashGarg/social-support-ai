@@ -23,34 +23,36 @@ export const theme = {
   },
 } as const
 
-export const muiTheme = createTheme({
-  palette: {
-    primary: {
-      main: theme.colors.primary,
-      contrastText: theme.colors.onPrimary,
+export const createMuiTheme = (direction: 'ltr' | 'rtl') =>
+  createTheme({
+    direction,
+    palette: {
+      primary: {
+        main: theme.colors.primary,
+        contrastText: theme.colors.onPrimary,
+      },
+      background: {
+        default: theme.colors.appBackground,
+        paper: theme.colors.surface,
+      },
+      text: {
+        primary: theme.colors.textPrimary,
+        secondary: theme.colors.textMuted,
+      },
     },
-    background: {
-      default: theme.colors.appBackground,
-      paper: theme.colors.surface,
+    typography: {
+      fontFamily: theme.fonts.base,
     },
-    text: {
-      primary: theme.colors.textPrimary,
-      secondary: theme.colors.textMuted,
-    },
-  },
-  typography: {
-    fontFamily: theme.fonts.base,
-  },
-  components: {
-    MuiButton: {
-      styleOverrides: {
-        root: {
-          cursor: 'pointer',
-          '&.Mui-disabled': {
-            cursor: 'not-allowed',
+    components: {
+      MuiButton: {
+        styleOverrides: {
+          root: {
+            cursor: 'pointer',
+            '&.Mui-disabled': {
+              cursor: 'not-allowed',
+            },
           },
         },
       },
     },
-  },
-})
+  })

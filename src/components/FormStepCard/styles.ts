@@ -3,12 +3,9 @@ import { theme } from '../../theme'
 export const formStepCardStyles = {
   formCard: {
     border: `1px solid ${theme.colors.borderMuted}`,
-    borderRadius: 16,
+    borderRadius: 6,
     padding: 10,
     boxShadow: theme.shadows.soft,
-  },
-  formCardRtl: {
-    textAlign: 'right' as const,
   },
   stepHeader: {
     display: 'flex',
@@ -16,9 +13,15 @@ export const formStepCardStyles = {
     gap: 2,
     marginBottom: 10,
   },
+  stepHeaderRtl: {
+    alignItems: 'flex-end',
+  },
   stepTitle: {
     fontWeight: 600,
     color: theme.colors.textMuted,
+  },
+  sectionTitle: {
+    fontWeight: 600,
   },
   stepProgress: {
     height: 6,

@@ -1,13 +1,10 @@
 import { FormControl, FormControlLabel, FormHelperText, FormLabel, Radio, RadioGroup } from '@mui/material'
 import type { FormElement } from '../../types/form'
-import { getLabelSx } from './styles'
 
 type Props = {
     element: FormElement
     label: string
     value: string
-    isRtl: boolean
-    dir: string
     required?: boolean
     errorMessage?: string | null
     onChange: React.ChangeEventHandler<HTMLInputElement>
@@ -19,8 +16,6 @@ export default function RadioElement({
     element,
     label,
     value,
-    isRtl,
-    dir,
     required,
     errorMessage,
     onChange,
@@ -28,8 +23,8 @@ export default function RadioElement({
     renderOptionLabel,
 }: Props) {
     return (
-        <FormControl component="fieldset" dir={dir} required={required} error={Boolean(errorMessage)}>
-            <FormLabel component="legend" sx={getLabelSx(isRtl)} required={required}>
+        <FormControl component="fieldset" required={required} error={Boolean(errorMessage)}>
+            <FormLabel component="legend" required={required}>
                 {label}
             </FormLabel>
             <RadioGroup
@@ -38,7 +33,6 @@ export default function RadioElement({
                 value={value}
                 onChange={onChange}
                 onBlur={onBlur}
-                sx={{ justifyContent: isRtl ? 'flex-end' : 'flex-start' }}
             >
                 {element.options?.map((option) => (
                     <FormControlLabel

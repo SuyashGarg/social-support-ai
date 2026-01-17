@@ -3,9 +3,6 @@ import { Autocomplete, TextField } from '@mui/material'
 import { List } from 'react-window'
 import type { RowComponentProps } from 'react-window'
 import { LISTBOX_PADDING } from '../../common/constants'
-import { getLabelSx } from '../../common/styles'
-import { getTextAlign } from '../../common/utils'
-import { getInputStyles } from './styles'
 
 type Option = {
     value: string
@@ -21,8 +18,6 @@ type Props = {
     options: Option[]
     required?: boolean
     errorMessage?: string | null
-    isRtl: boolean
-    dir: string
     onChange: (value: string) => void
     onBlur: () => void
 }
@@ -36,8 +31,6 @@ export default function VirtualizedSelect({
     options,
     required,
     errorMessage,
-    isRtl,
-    dir,
     onChange,
     onBlur,
 }: Props) {
@@ -113,12 +106,6 @@ export default function VirtualizedSelect({
                         inputLabel: {
                             ...params.InputLabelProps,
                             required,
-                            sx: getLabelSx(isRtl),
-                        },
-                        htmlInput: {
-                            ...params.inputProps,
-                            dir,
-                            style: { textAlign: getTextAlign(isRtl) },
                         },
                     }}
                     onBlur={onBlur}
@@ -128,7 +115,6 @@ export default function VirtualizedSelect({
             )}
             openOnFocus
             clearOnEscape
-            sx={getInputStyles(isRtl)}
         />
     )
 }

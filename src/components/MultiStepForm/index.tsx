@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Box, Button, CircularProgress } from '@mui/material'
+import ArrowBackIcon from '@mui/icons-material/ArrowBack'
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
 import { isValidPhoneNumber } from 'libphonenumber-js'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -9,6 +11,7 @@ import { multiStepFormStyles as styles } from './styles'
 import { useLanguage } from '../../context/LanguageContext'
 import { isEmailValid, isNationalIdValid, normalizePhone } from '../../common/utils'
 import { mockSubmitForm } from '../../api/axios'
+import { addHistoryEntry } from '../../common/history'
 
 type Props = {
   steps: FormStep[]
@@ -25,21 +28,21 @@ export default function MultiStepForm({
   nextLabel,
   submitLabel,
 }: Props) {
-  const { isRtl } = useLanguage()
-  const { t } = useTranslation()
-  const navigate = useNavigate()
-  const { stepIndex: stepParam } = useParams<{ stepIndex: string }>()
+  const { isRtl, language } = useLanguage();
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+  const { stepIndex: stepParam } = useParams<{ stepIndex: string }>();
   const [formData, setFormData] = useState<Record<string, string | boolean>>(() => {
-    if (typeof window === 'undefined') return {}
+    if (typeof window === 'undefined') return {};
     try {
-      const stored = window.localStorage.getItem('socialSupportFormData')
-      return stored ? (JSON.parse(stored) as Record<string, string | boolean>) : {}
+      const stored = window.localStorage.getItem('socialSupportFormData');
+      return stored ? (JSON.parse(stored) as Record<string, string | boolean>) : {};
     } catch {
-      return {}
+      return {};
     }
-  })
-  const [formErrors, setFormErrors] = useState<Record<string, string | null>>({})
-  const [isSubmitting, setIsSubmitting] = useState(false)
+  });
+  const [formErrors, setFormErrors] = useState<Record<string, string | null>>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const stepIndex = useMemo(() => {
     const parsed = Number(stepParam)
@@ -91,80 +94,142 @@ export default function MultiStepForm({
 
   useEffect(() => {
     if (stepIndex > 0 && Object.keys(formData).length === 0) {
-      navigate('/step/0', { replace: true })
+      navigate('/step/0', { replace: true });
     }
-  }, [formData, navigate, stepIndex])
+  }, [formData, navigate, stepIndex]);
 
   const handleChange = useCallback((name: string, value: string | boolean) => {
-    setFormData((prev) => ({ ...prev, [name]: value }))
-    setFormErrors((prev) => (prev[name] ? { ...prev, [name]: null } : prev))
-  }, [])
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormErrors((prev) => (prev[name] ? { ...prev, [name]: null } : prev));
+  }, []);
 
   const validateField = useCallback((name: string, value: string | boolean | undefined, required?: boolean) => {
     if (required && (!value || String(value).trim() === '')) {
-      return 'Required'
+      return t('validation.required');
     }
     if (name === 'nationalId' && typeof value === 'string' && value) {
-      return isNationalIdValid(value) ? null : 'Invalid document number'
+      return isNationalIdValid(value) ? null : t('validation.invalidDocumentNumber');
     }
     if (name === 'email' && typeof value === 'string' && value) {
-      return isEmailValid(value) ? null : 'Invalid email'
+      return isEmailValid(value) ? null : t('validation.invalidEmail');
     }
     if (name === 'phone' && typeof value === 'string' && value) {
-      const normalized = normalizePhone(value)
-      return normalized && isValidPhoneNumber(normalized) ? null : 'Invalid phone'
+      const normalized = normalizePhone(value);
+      return normalized && isValidPhoneNumber(normalized) ? null : t('validation.invalidPhone');
     }
-    return null
-  }, [])
+    return null;
+  }, [t])
+
+  // Re-translate existing error messages when language changes
+  useEffect(() => {
+    setFormErrors((prev) => {
+      // Only update fields that already have errors
+      const fieldsWithErrors = Object.keys(prev).filter((name) => prev[name] !== null);
+      if (fieldsWithErrors.length === 0) return prev;
+
+      const updated = { ...prev };
+      let hasChanges = false;
+
+      steps.forEach((step) => {
+        step.elements.forEach((element) => {
+          // Only re-validate fields that already have errors
+          if (fieldsWithErrors.includes(element.name)) {
+            const currentValue = formData[element.name];
+            const error = validateField(element.name, currentValue, element.required);
+            if (updated[element.name] !== error) {
+              updated[element.name] = error;
+              hasChanges = true;
+            }
+          }
+        });
+      });
+
+      return hasChanges ? updated : prev;
+    });
+  }, [language, validateField, steps, formData]);
 
   const handleFieldBlur = useCallback(
     (element: FormStep['elements'][number], value: string | boolean | undefined) => {
-      const error = validateField(element.name, value, element.required)
-      setFormErrors((prev) => ({ ...prev, [element.name]: error }))
+      const error = validateField(element.name, value, element.required);
+      setFormErrors((prev) => ({ ...prev, [element.name]: error }));
     },
     [validateField],
-  )
+  );
+
+  const buildHistoryEntry = useCallback(
+    (data: Record<string, string | boolean>) => ({
+      id: `${Date.now()}`,
+      submittedAt: new Date().toISOString(),
+      data,
+    }),
+    [],
+  );
 
   const handleSubmit = useCallback(async () => {
-    const errors: Record<string, string> = {}
+    const errors: Record<string, string> = {};
     steps.forEach((step) => {
       step.elements.forEach((element) => {
-        const error = validateField(element.name, formData[element.name], element.required)
+        const error = validateField(element.name, formData[element.name], element.required);
         if (error) {
-          errors[element.name] = error
+          errors[element.name] = error;
         }
-      })
-    })
-    setFormErrors(errors)
-    if (Object.keys(errors).length > 0) return
+      });
+    });
+    setFormErrors(errors);
+    if (Object.keys(errors).length > 0) return;
 
-    setIsSubmitting(true)
+    setIsSubmitting(true);
     try {
-      const response = await mockSubmitForm(formData)
+      const response = await mockSubmitForm(formData);
       if (typeof window !== 'undefined') {
-        window.localStorage.setItem('socialSupportFormResponse', JSON.stringify(response.data))
+        window.localStorage.setItem('socialSupportFormResponse', JSON.stringify(response.data));
       }
-      navigate('/review')
+      addHistoryEntry(buildHistoryEntry(response.data));
+      navigate('/review');
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
-  }, [formData, navigate, steps, validateField])
+  }, [buildHistoryEntry, formData, navigate, steps, validateField]);
 
   const handleBackClick = useCallback(() => {
     if (!hasSessionData) {
-      navigate('/step/0')
-      return
+      navigate('/step/0');
+      return;
     }
-    navigate(`/step/${Math.max(stepIndex - 1, 0)}`)
-  }, [hasSessionData, navigate, stepIndex])
+    navigate(`/step/${Math.max(stepIndex - 1, 0)}`);
+  }, [hasSessionData, navigate, stepIndex]);
+
+  const validateCurrentStep = useCallback(() => {
+    const errors: Record<string, string | null> = {};
+    let hasErrors = false;
+
+    step.elements.forEach((element) => {
+      const error = validateField(element.name, formData[element.name], element.required);
+      if (error) {
+        errors[element.name] = error;
+        hasErrors = true;
+      }
+    });
+
+    if (hasErrors) {
+      setFormErrors((prev) => ({ ...prev, ...errors }));
+    }
+
+    return !hasErrors;
+  }, [formData, step.elements, validateField]);
 
   const handleNextClick = useCallback(() => {
     if (!hasSessionData) {
-      navigate('/step/0')
-      return
+      navigate('/step/0');
+      return;
     }
-    navigate(`/step/${stepIndex + 1}`)
-  }, [hasSessionData, navigate, stepIndex])
+
+    if (!validateCurrentStep()) {
+      return;
+    }
+
+    navigate(`/step/${stepIndex + 1}`);
+  }, [hasSessionData, navigate, stepIndex, validateCurrentStep]);
 
   return (
     <>
@@ -179,9 +244,9 @@ export default function MultiStepForm({
         stepLabel={stepLabel}
       />
 
-      <Box sx={{ ...styles.formActions, ...(isRtl ? styles.formActionsRtl : {}) }}>
+      <Box sx={styles.formActions}>
         <Button
-          variant="contained"
+          variant="outlined"
           color="primary"
           sx={{
             ...styles.button,
@@ -189,6 +254,7 @@ export default function MultiStepForm({
           }}
           onClick={handleBackClick}
           disabled={stepIndex === 0}
+          startIcon={isRtl ? <ArrowForwardIcon /> : <ArrowBackIcon />}
         >
           {backLabel}
         </Button>
@@ -211,6 +277,7 @@ export default function MultiStepForm({
             color="primary"
             sx={styles.button}
             onClick={handleNextClick}
+            endIcon={isRtl ? <ArrowBackIcon /> : <ArrowForwardIcon />}
           >
             {nextLabel}
           </Button>

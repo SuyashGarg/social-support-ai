@@ -6,8 +6,6 @@ type Props = {
     value: string
     label: string
     placeholder: string
-    isRtl: boolean
-    dir: string
     required?: boolean
     errorMessage?: string | null
     onChange: (value: string) => void
@@ -20,8 +18,6 @@ export default function SelectElement({
     value,
     label,
     placeholder,
-    isRtl,
-    dir,
     required,
     errorMessage,
     onChange,
@@ -44,8 +40,6 @@ export default function SelectElement({
             options={options}
             required={required}
             errorMessage={errorMessage}
-            isRtl={isRtl}
-            dir={dir}
             onChange={onChange}
             onBlur={onBlur}
         />

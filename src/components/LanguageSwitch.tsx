@@ -1,5 +1,6 @@
 import { Box, Button, ButtonGroup, Typography } from '@mui/material'
 import { useLanguage } from '../context/LanguageContext'
+import { theme } from '../theme'
 
 const LABEL = 'Language'
 
@@ -21,6 +22,7 @@ export default function LanguageSwitch() {
       <ButtonGroup size="small" aria-label={LABEL}>
         <Button
           variant={language === 'en' ? 'contained' : 'outlined'}
+          sx={{ backgroundColor: language === 'en' ? theme.colors.primary : 'transparent', borderColor: theme.colors.primary, color: language === 'en' ? theme.colors.surface : theme.colors.textPrimary }}
           onClick={() => setLanguage('en')}
           aria-pressed={language === 'en'}
         >
@@ -28,6 +30,7 @@ export default function LanguageSwitch() {
         </Button>
         <Button
           variant={language === 'ar' ? 'contained' : 'outlined'}
+          sx={{ backgroundColor: language === 'ar' ? theme.colors.primary : 'transparent', borderColor: theme.colors.primary, color: language === 'ar' ? theme.colors.surface : theme.colors.textPrimary }}
           onClick={() => setLanguage('ar')}
           aria-pressed={language === 'ar'}
         >

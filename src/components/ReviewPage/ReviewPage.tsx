@@ -1,33 +1,44 @@
-import { Box, Button, Divider, Paper, Typography } from '@mui/material'
-import Grid from '@mui/material/Grid'
-import CheckCircleIcon from '@mui/icons-material/CheckCircle'
-import { useMemo } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { useTranslation } from 'react-i18next'
-import { getRowStyles, reviewPageStyles as styles } from './ReviewPage.styles'
-import { formSteps } from '../../data/formMock'
+import { Box, Button, Divider, Paper, Typography } from '@mui/material';
+import Grid from '@mui/material/Grid';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import { useMemo } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import { getRowStyles, reviewPageStyles as styles } from './ReviewPage.styles';
+import { formSteps } from '../../data/formMock';
+import { getHistoryEntryById } from '../../common/history';
+import { useLanguage } from '../../context/LanguageContext';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import isEmpty from 'lodash/isEmpty';
 
 export default function ReviewPage() {
-    const navigate = useNavigate()
-    const { t } = useTranslation()
+    const navigate = useNavigate();
+    const { t } = useTranslation();
+    const { isRtl } = useLanguage();
+    const { historyId } = useParams<{ historyId?: string }>();
 
     const clearSessionData = () => {
         if (typeof window !== 'undefined') {
-            window.localStorage.removeItem('socialSupportFormData')
-            window.localStorage.removeItem('socialSupportFormResponse')
+            localStorage.removeItem('socialSupportFormData')
+            localStorage.removeItem('socialSupportFormResponse')
         }
     }
 
     const response = useMemo(() => {
         if (typeof window === 'undefined') return null
         try {
-            const stored = window.localStorage.getItem('socialSupportFormResponse');
-            clearSessionData();
+            if (historyId) {
+                const entry = getHistoryEntryById(historyId)
+                if (!isEmpty(entry)) { return entry?.data ?? null; }
+            }
+            const stored = localStorage.getItem('socialSupportFormResponse')
+            clearSessionData()
             return stored ? (JSON.parse(stored) as Record<string, string | boolean>) : null
         } catch {
             return null
         }
-    }, [])
+    }, [historyId])
 
     const handleStartOver = () => {
         navigate('/step/0')
@@ -78,6 +89,17 @@ export default function ReviewPage() {
         <Paper variant="outlined" sx={styles.container}>
             <Box sx={styles.content}>
                 <Box sx={styles.titleRow}>
+                    {historyId && (<Button
+                        variant="text"
+                        sx={{
+                            minWidth: 0,
+                            padding: 0,
+                            textTransform: 'none' as const,
+                        }}
+                        onClick={() => navigate(-1)}
+                        startIcon={!isRtl ? <ArrowBackIcon /> : undefined}
+                        endIcon={isRtl ? <ArrowForwardIcon /> : undefined}
+                    />)}
                     <CheckCircleIcon sx={styles.titleIcon} />
                     <Typography variant="h5" component="h2" sx={styles.title}>
                         {t('app.preview')}

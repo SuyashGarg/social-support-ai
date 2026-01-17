@@ -22,8 +22,6 @@ type Props = {
     value: string
     label: string
     placeholder: string
-    isRtl: boolean
-    dir: string
     required?: boolean
     errorMessage?: string | null
     onValueChange: (nextValue: string) => void
@@ -35,8 +33,6 @@ export default function TextareaAssistElement({
     value,
     label,
     placeholder,
-    isRtl,
-    dir,
     required,
     errorMessage,
     onValueChange,
@@ -99,15 +95,13 @@ export default function TextareaAssistElement({
                 value={value}
                 label={label}
                 placeholder={placeholder}
-                isRtl={isRtl}
-                dir={dir}
                 required={required}
                 errorMessage={errorMessage}
                 onChange={handleTextareaChange}
                 onBlur={onBlur}
             />
 
-            <Box sx={styles.buttonRow(isRtl)}>
+            <Box sx={styles.buttonRow}>
                 <Button
                     variant="outlined"
                     size="small"

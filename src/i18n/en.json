@@ -17,7 +17,20 @@
     "accept": "Accept",
     "discard": "Discard",
     "suggestion": "Suggestion",
-    "generating": "Generating..."
+    "generating": "Generating...",
+    "profile": "Profile",
+    "history": "History",
+    "logout": "Logout",
+    "noHistory": "No history available.",
+    "serialNo": "S.No",
+    "name": "Name",
+    "email": "Email"
+  },
+  "validation": {
+    "required": "Required",
+    "invalidEmail": "Invalid email",
+    "invalidPhone": "Invalid phone",
+    "invalidDocumentNumber": "Invalid document number"
   },
   "steps": {
     "profile": "Personal Information",
@@ -31,6 +44,7 @@
       "nationalId": "National ID",
       "nationalIdPlaceholder": "123-4567-1234567-1",
       "dateOfBirth": "Date of Birth",
+      "dateOfBirthPlaceholder": "dd/mm/yyyy",
       "gender": "Gender",
       "genderFemale": "Female",
       "genderMale": "Male",
