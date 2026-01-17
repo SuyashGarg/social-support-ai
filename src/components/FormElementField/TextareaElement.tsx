@@ -6,7 +6,6 @@ export default function TextareaElement({
     value,
     label,
     placeholder,
-    isRtl,
     required,
     errorMessage,
     onChange,
