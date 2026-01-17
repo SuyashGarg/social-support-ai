@@ -50,7 +50,7 @@ export default function HistoryPage() {
                     <TableBody>
                         {history.map((entry, index) => (
                             <TableRow key={entry.id} hover>
-                                <TableCell>
+                                <TableCell sx={styles.tableCell}>
                                     <Button
                                         variant="text"
                                         onClick={() => handleRowClick(entry.id)}
@@ -59,8 +59,8 @@ export default function HistoryPage() {
                                         {index + 1}
                                     </Button>
                                 </TableCell>
-                                <TableCell>{String(entry.data.fullName ?? '-')}</TableCell>
-                                <TableCell>{String(entry.data.email ?? '-')}</TableCell>
+                                <TableCell sx={styles.tableCell}>{String(entry.data.fullName ?? '-')}</TableCell>
+                                <TableCell sx={styles.tableCell}>{String(entry.data.email ?? '-')}</TableCell>
                             </TableRow>
                         ))}
                     </TableBody>

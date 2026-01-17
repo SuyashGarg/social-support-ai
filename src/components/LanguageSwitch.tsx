@@ -4,6 +4,14 @@ import { theme } from '../theme'
 
 const LABEL = 'Language'
 
+const buttonBaseStyles = {
+  fontSize: { xs: '0.6rem', md: '0.875rem' },
+  padding: { xs: '2px 8px', md: '4px 12px' },
+  minWidth: 'auto',
+  lineHeight: 1.5,
+  borderColor: theme.colors.primary,
+}
+
 export default function LanguageSwitch() {
   const { language, setLanguage } = useLanguage()
 
@@ -27,10 +35,9 @@ export default function LanguageSwitch() {
         <Button
           variant={language === 'en' ? 'contained' : 'outlined'}
           sx={{
+            ...buttonBaseStyles,
             backgroundColor: language === 'en' ? theme.colors.primary : 'transparent',
-            borderColor: theme.colors.primary,
             color: language === 'en' ? theme.colors.surface : theme.colors.textPrimary,
-            fontSize: { xs: '0.6rem', md: '1rem' }
           }}
           onClick={() => setLanguage('en')}
           aria-pressed={language === 'en'}
@@ -40,10 +47,9 @@ export default function LanguageSwitch() {
         <Button
           variant={language === 'ar' ? 'contained' : 'outlined'}
           sx={{
+            ...buttonBaseStyles,
             backgroundColor: language === 'ar' ? theme.colors.primary : 'transparent',
-            borderColor: theme.colors.primary,
             color: language === 'ar' ? theme.colors.surface : theme.colors.textPrimary,
-            fontSize: { xs: '0.6rem', md: '1rem' }
           }}
           onClick={() => setLanguage('ar')}
           aria-pressed={language === 'ar'}

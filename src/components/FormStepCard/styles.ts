@@ -19,9 +19,11 @@ export const formStepCardStyles = {
   stepTitle: {
     fontWeight: 600,
     color: theme.colors.textMuted,
+    fontSize: { xs: '0.75rem', md: '0.875rem' },
   },
   sectionTitle: {
     fontWeight: 600,
+    fontSize: { xs: '1rem', md: '1.5rem' },
   },
   stepProgress: {
     height: 6,

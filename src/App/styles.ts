@@ -79,7 +79,7 @@ export const appStyles = {
   },
   sectionTitle: {
     margin: '12px 0 4px',
-    fontSize: '1.25rem',
+    fontSize: { xs: '0.875rem', md: '1.25rem' },
     fontWeight: 700,
   },
 }

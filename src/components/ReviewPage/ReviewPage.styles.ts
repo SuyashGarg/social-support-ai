@@ -16,6 +16,7 @@ export const reviewPageStyles = {
     },
     title: {
         fontWeight: 700,
+        fontSize: { xs: '1rem', md: '1.5rem' },
     },
     titleRow: {
         display: 'flex',
@@ -28,6 +29,7 @@ export const reviewPageStyles = {
     },
     empty: {
         color: theme.colors.textMuted,
+        fontSize: { xs: '0.75rem', md: '0.875rem' },
     },
     actions: {
         display: 'flex',
@@ -37,6 +39,7 @@ export const reviewPageStyles = {
         fontWeight: 700,
         marginBottom: 2,
         marginTop: 2,
+        fontSize: { xs: '0.875rem', md: '1.25rem' },
     },
     sectionRows: {
         display: 'flex',
@@ -54,10 +57,12 @@ export const reviewPageStyles = {
     rowLabel: {
         color: theme.colors.textMuted,
         fontWeight: 500,
+        fontSize: { xs: '0.75rem', md: '0.875rem' },
     },
     rowValue: {
         color: theme.colors.textPrimary,
         fontWeight: 600,
+        fontSize: { xs: '0.75rem', md: '0.875rem' },
     },
     sectionDivider: {
         marginTop: 8,
