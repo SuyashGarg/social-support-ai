@@ -24,7 +24,7 @@ export default function FormElementField({
   value,
   errorMessage,
 }: Props) {
-  const { formData, onChange, onMetaChange, onBlur } = useForm()
+  const { formData, onChange, onBlur } = useForm()
   const { t } = useTranslation();
   const { isRtl } = useLanguage();
   const label = t(element.labelKey);
