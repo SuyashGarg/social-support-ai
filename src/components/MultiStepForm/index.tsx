@@ -20,18 +20,18 @@
  * - Cleared only when explicitly starting new form
  * - Survives page refresh
  */
-import { useEffect, useMemo, useRef } from 'react'
-import { Box, Button, CircularProgress } from '@mui/material'
-import ArrowBackIcon from '@mui/icons-material/ArrowBack'
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
-import { useNavigate, useParams } from 'react-router-dom'
-import type { FormStep } from '../../types/form'
-import FormStepCard from '../FormStepCard'
-import { multiStepFormStyles as styles } from './styles'
-import { useLanguage } from '../../context/LanguageContext'
-import { FormProvider, useMultiStepForm } from './MultiStepFormContext'
-import { useFocusManager } from './useFocusManager'
-import { clearSessionData } from '../../common/storage'
+import { useEffect, useMemo, useRef } from 'react';
+import { Box, Button, CircularProgress } from '@mui/material';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import { useNavigate, useParams } from 'react-router-dom';
+import type { FormStep } from '../../types/form';
+import FormStepCard from '../FormStepCard';
+import { multiStepFormStyles as styles } from './styles';
+import { useLanguage } from '../../context/LanguageContext';
+import { FormProvider, useMultiStepForm } from './MultiStepFormContext';
+import { useFocusManager } from './useFocusManager';
+import { clearSessionData } from '../../common/storage';
 
 type Props = {
   steps: FormStep[]
@@ -48,9 +48,9 @@ function MultiStepFormContent({
   nextLabel,
   submitLabel,
 }: Props) {
-  const { isRtl } = useLanguage()
-  const navigate = useNavigate()
-  const { stepIndex: stepParam } = useParams<{ stepIndex: string }>()
+  const { isRtl } = useLanguage();
+  const navigate = useNavigate();
+  const { stepIndex: stepParam } = useParams<{ stepIndex: string }>();
   const {
     formData,
     formErrors,
@@ -59,63 +59,63 @@ function MultiStepFormContent({
     handleSubmit,
     isStepComplete,
     getLastCompletedStepIndex,
-  } = useMultiStepForm()
+  } = useMultiStepForm();
 
   // Track navigation source to avoid clearing storage on back button or redirect
-  const isBackNavigationRef = useRef(false)
-  const isRedirectNavigationRef = useRef(false)
-  const previousStepIndexRef = useRef<number | null>(null)
-  const isInitialMountRef = useRef(true)
+  const isBackNavigationRef = useRef(false);
+  const isRedirectNavigationRef = useRef(false);
+  const previousStepIndexRef = useRef<number | null>(null);
+  const isInitialMountRef = useRef(true);
 
   const stepIndex = useMemo(() => {
-    const parsed = Number(stepParam)
-    if (Number.isNaN(parsed) || parsed < 0) return 0
-    if (parsed >= steps.length) return steps.length - 1
-    return parsed
-  }, [stepParam, steps.length])
+    const parsed = Number(stepParam);
+    if (Number.isNaN(parsed) || parsed < 0) return 0;
+    if (parsed >= steps.length) return steps.length - 1;
+    return parsed;
+  }, [stepParam, steps.length]);
 
-  const step = useMemo(() => steps[stepIndex], [steps, stepIndex])
+  const step = useMemo(() => steps[stepIndex], [steps, stepIndex]);
 
   const { focusOnStep } = useFocusManager({
     step,
     formErrors,
     stepIndex,
     enabled: true,
-  })
-  const isLastStep = stepIndex === steps.length - 1
-  const isConsentChecked = Boolean(formData.consent)
-  const hasSessionData = useMemo(() => Object.keys(formData).length > 0, [formData])
-  const previousStepIndexForScrollRef = useRef<number | null>(null)
+  });
+  const isLastStep = stepIndex === steps.length - 1;
+  const isConsentChecked = Boolean(formData.consent);
+  const hasSessionData = useMemo(() => Object.keys(formData).length > 0, [formData]);
+  const previousStepIndexForScrollRef = useRef<number | null>(null);
 
   useEffect(() => {
     // Only scroll to top when step actually changes, not on every render
-    const prevStep = previousStepIndexForScrollRef.current
+    const prevStep = previousStepIndexForScrollRef.current;
     if (prevStep !== null && prevStep !== stepIndex) {
-      window.scrollTo({ top: 0, behavior: 'smooth' })
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
-    previousStepIndexForScrollRef.current = stepIndex
+    previousStepIndexForScrollRef.current = stepIndex;
 
     // Focus on step after navigation
     // Use setTimeout to ensure DOM is updated after navigation
     const timeoutId = setTimeout(() => {
-      focusOnStep()
-    }, 100)
-    return () => clearTimeout(timeoutId)
-  }, [stepIndex, focusOnStep])
+      focusOnStep();
+    }, 100);
+    return () => clearTimeout(timeoutId);
+  }, [stepIndex, focusOnStep]);
 
   useEffect(() => {
-    const parsed = Number(stepParam)
+    const parsed = Number(stepParam);
     if (Number.isNaN(parsed) || parsed < 0 || parsed >= steps.length) {
-      navigate(`/step/${stepIndex}`, { replace: true })
+      navigate(`/step/${stepIndex}`, { replace: true });
     }
-  }, [navigate, stepIndex, stepParam, steps.length])
+  }, [navigate, stepIndex, stepParam, steps.length]);
 
   // Check if previous steps are complete when navigating directly to a step
   useEffect(() => {
     if (stepIndex > 0 && Object.keys(formData).length === 0) {
-      isRedirectNavigationRef.current = true
-      navigate('/step/0', { replace: true })
-      return
+      isRedirectNavigationRef.current = true;
+      navigate('/step/0', { replace: true });
+      return;
     }
 
     // Check if previous steps are complete when navigating directly to a step
@@ -124,26 +124,26 @@ function MultiStepFormContent({
       for (let i = 0; i < stepIndex; i++) {
         if (!isStepComplete(steps[i], formData)) {
           // Find the last completed step and redirect there
-          const lastCompletedStep = getLastCompletedStepIndex(formData)
-          const redirectStep = lastCompletedStep >= 0 ? lastCompletedStep : 0
-          isRedirectNavigationRef.current = true
-          navigate(`/step/${redirectStep}`, { replace: true })
-          return
+          const lastCompletedStep = getLastCompletedStepIndex(formData);
+          const redirectStep = lastCompletedStep >= 0 ? lastCompletedStep : 0;
+          isRedirectNavigationRef.current = true;
+          navigate(`/step/${redirectStep}`, { replace: true });
+          return;
         }
       }
     }
-  }, [formData, navigate, stepIndex, steps, isStepComplete, getLastCompletedStepIndex])
+  }, [formData, navigate, stepIndex, steps, isStepComplete, getLastCompletedStepIndex]);
 
   // Clear storage when navigating to step 0 directly (not from back button or redirect)
   useEffect(() => {
-    const prevStep = previousStepIndexRef.current
-    const isInitialMount = isInitialMountRef.current
+    const prevStep = previousStepIndexRef.current;
+    const isInitialMount = isInitialMountRef.current;
 
     // Skip on initial mount - let the redirect logic handle it
     if (isInitialMount) {
-      isInitialMountRef.current = false
-      previousStepIndexRef.current = stepIndex
-      return
+      isInitialMountRef.current = false;
+      previousStepIndexRef.current = stepIndex;
+      return;
     }
 
     // Clear storage only when:
@@ -157,49 +157,49 @@ function MultiStepFormContent({
       !isRedirectNavigationRef.current &&
       prevStep !== 0 // Only clear if coming from a different step (not already on step 0)
     ) {
-      clearSessionData()
+      clearSessionData();
     }
 
     // Update previous step index
-    previousStepIndexRef.current = stepIndex
+    previousStepIndexRef.current = stepIndex;
 
     // Reset flags after checking (use setTimeout to ensure navigation completes)
     setTimeout(() => {
-      isBackNavigationRef.current = false
-      isRedirectNavigationRef.current = false
-    }, 0)
-  }, [stepIndex])
+      isBackNavigationRef.current = false;
+      isRedirectNavigationRef.current = false;
+    }, 0);
+  }, [stepIndex]);
 
   const handleBackClick = () => {
-    isBackNavigationRef.current = true
+    isBackNavigationRef.current = true;
     if (!hasSessionData) {
-      navigate('/step/0')
-      return
+      navigate('/step/0');
+      return;
     }
-    navigate(`/step/${Math.max(stepIndex - 1, 0)}`)
-  }
+    navigate(`/step/${Math.max(stepIndex - 1, 0)}`);
+  };
 
   const handleNextClick = () => {
     if (!hasSessionData) {
-      navigate('/step/0')
-      return
+      navigate('/step/0');
+      return;
     }
 
     if (!validateCurrentStep(step)) {
       // If validation fails, focus on first error field (force focus)
       setTimeout(() => {
-        focusOnStep(true)
-      }, 100)
-      return
+        focusOnStep(true);
+      }, 100);
+      return;
     }
 
-    navigate(`/step/${stepIndex + 1}`)
-  }
+    navigate(`/step/${stepIndex + 1}`);
+  };
 
   const handleSubmitClick = async () => {
-    await handleSubmit()
-    navigate('/review')
-  }
+    await handleSubmit();
+    navigate('/review');
+  };
 
   return (
     <>
@@ -254,7 +254,7 @@ function MultiStepFormContent({
         )}
       </Box>
     </>
-  )
+  );
 }
 
 export default function MultiStepForm(props: Props) {
@@ -262,5 +262,5 @@ export default function MultiStepForm(props: Props) {
     <FormProvider steps={props.steps}>
       <MultiStepFormContent {...props} />
     </FormProvider>
-  )
+  );
 }

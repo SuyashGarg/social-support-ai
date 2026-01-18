@@ -1,4 +1,4 @@
-import { theme } from '../../theme'
+import { theme } from '../../theme';
 
 export const reviewPageStyles = {
     spacing: {
@@ -69,9 +69,9 @@ export const reviewPageStyles = {
         marginBottom: 4,
         borderColor: theme.colors.textPrimary,
     },
-}
+};
 
 export const getRowStyles = (isLast: boolean) => ({
     ...reviewPageStyles.row,
     ...(isLast ? reviewPageStyles.rowLast : {}),
-})
+});

@@ -1,5 +1,5 @@
-import type { FormElement } from '../../types/form'
-import VirtualizedSelect from '../VirtualizedSelect'
+import type { FormElement } from '../../types/form';
+import VirtualizedSelect from '../VirtualizedSelect';
 
 type Props = {
     element: FormElement
@@ -28,7 +28,7 @@ export default function SelectElement({
         element.options?.map((option) => ({
             value: option.value,
             label: renderOptionLabel(option.labelKey),
-        })) ?? []
+        })) ?? [];
 
     return (
         <VirtualizedSelect
@@ -43,5 +43,5 @@ export default function SelectElement({
             onChange={onChange}
             onBlur={onBlur}
         />
-    )
+    );
 }

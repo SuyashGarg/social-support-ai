@@ -28,4 +28,4 @@ export const multiStepFormStyles = {
   previewTitle: {
     marginTop: 0,
   },
-}
+};

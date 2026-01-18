@@ -1,23 +1,23 @@
-import { Box, Button, Paper, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material'
-import ArrowBackIcon from '@mui/icons-material/ArrowBack'
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
-import { useMemo } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { useTranslation } from 'react-i18next'
-import { getHistoryEntries } from '../common/history'
-import { historyPageStyles as styles } from './HistoryPage.styles'
-import { useLanguage } from '../context/LanguageContext'
+import { Box, Button, Paper, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import { useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import { getHistoryEntries } from '../common/history';
+import { historyPageStyles as styles } from './HistoryPage.styles';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function HistoryPage() {
-    const { t } = useTranslation()
-    const navigate = useNavigate()
-    const { isRtl } = useLanguage()
+    const { t } = useTranslation();
+    const navigate = useNavigate();
+    const { isRtl } = useLanguage();
 
-    const history = useMemo(() => getHistoryEntries(), [])
+    const history = useMemo(() => getHistoryEntries(), []);
 
     const handleRowClick = (id: string) => {
-        navigate(`/review/${id}`)
-    }
+        navigate(`/review/${id}`);
+    };
 
     return (
         <Paper variant="outlined" sx={styles.container}>
@@ -56,8 +56,8 @@ export default function HistoryPage() {
                                 onClick={() => handleRowClick(entry.id)}
                                 onKeyDown={(e) => {
                                     if (e.key === 'Enter' || e.key === ' ') {
-                                        e.preventDefault()
-                                        handleRowClick(entry.id)
+                                        e.preventDefault();
+                                        handleRowClick(entry.id);
                                     }
                                 }}
                                 role="button"
@@ -68,8 +68,8 @@ export default function HistoryPage() {
                                     <Button
                                         variant="text"
                                         onClick={(e) => {
-                                            e.stopPropagation()
-                                            handleRowClick(entry.id)
+                                            e.stopPropagation();
+                                            handleRowClick(entry.id);
                                         }}
                                         sx={styles.linkButton}
                                         aria-hidden="true"
@@ -86,5 +86,5 @@ export default function HistoryPage() {
                 </Table>
             )}
         </Paper>
-    )
+    );
 }

@@ -1,8 +1,8 @@
-import axios, { type AxiosResponse } from 'axios'
+import axios, { type AxiosResponse } from 'axios';
 
 export const apiClient = axios.create({
     baseURL: '/api',
-})
+});
 
 export const mockSubmitForm = async <T>(
     payload: T,
@@ -21,18 +21,18 @@ export const mockSubmitForm = async <T>(
                         statusText: 'OK',
                         headers: {},
                         config,
-                    })
-                }, delayMs)
+                    });
+                }, delayMs);
             }),
-    })
-}
+    });
+};
 
 export async function generateTextFromOpenAI(situation: string) {
     const response = await apiClient.post<{ text: string; error?: string }>('/openAi', {
         situation,
-    })
+    });
     if (response.data?.error) {
-        throw new Error(response.data.error)
+        throw new Error(response.data.error);
     }
-    return response.data?.text ?? ''
+    return response.data?.text ?? '';
 }

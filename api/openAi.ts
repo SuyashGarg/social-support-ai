@@ -20,23 +20,23 @@
  * - Accessible at /api/openAi endpoint
  * - Handles CORS automatically
  */
-import OpenAI from 'openai'
+import OpenAI from 'openai';
 
-const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
+const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 export default async function handler(req: any, res: any) {
     if (req.method !== 'POST') {
-        return res.status(405).json({ error: 'Method not allowed' })
+        return res.status(405).json({ error: 'Method not allowed' });
     }
 
     if (!process.env.OPENAI_API_KEY) {
-        return res.status(500).json({ error: 'Missing OPENAI_API_KEY' })
+        return res.status(500).json({ error: 'Missing OPENAI_API_KEY' });
     }
 
     try {
-        const { situation } = req.body || {}
+        const { situation } = req.body || {};
         if (!situation || typeof situation !== 'string') {
-            return res.status(400).json({ error: 'situation must be a string' })
+            return res.status(400).json({ error: 'situation must be a string' });
         }
 
         const response = await client.chat.completions.create({
@@ -52,15 +52,15 @@ export default async function handler(req: any, res: any) {
                     content: `Situation: ${situation}\n\nWrite a short financial hardship statement (80–140 words).`,
                 },
             ],
-        })
+        });
 
-        return res.status(200).json({ text: response.choices[0].message.content ?? '' })
+        return res.status(200).json({ text: response.choices[0].message.content ?? '' });
     } catch (err: any) {
         if (err?.status === 429) {
             return res.status(429).json({
                 error: 'OpenAI quota exceeded. Please try again later.',
-            })
+            });
         }
-        return res.status(500).json({ error: 'Failed to generate response' })
+        return res.status(500).json({ error: 'Failed to generate response' });
     }
 }

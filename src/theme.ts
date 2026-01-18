@@ -1,4 +1,4 @@
-import { createTheme } from '@mui/material/styles'
+import { createTheme } from '@mui/material/styles';
 
 export const theme = {
   colors: {
@@ -21,7 +21,7 @@ export const theme = {
   shadows: {
     soft: '0 10px 25px rgba(15, 23, 42, 0.05)',
   },
-} as const
+} as const;
 
 export const createMuiTheme = (direction: 'ltr' | 'rtl') =>
   createTheme({
@@ -55,4 +55,4 @@ export const createMuiTheme = (direction: 'ltr' | 'rtl') =>
         },
       },
     },
-  })
+  });

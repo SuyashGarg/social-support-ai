@@ -1,1 +1,1 @@
-export const LISTBOX_PADDING = 8
+export const LISTBOX_PADDING = 8;

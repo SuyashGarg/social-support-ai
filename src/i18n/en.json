@@ -26,7 +26,8 @@
     "name": "Name",
     "email": "Email",
     "editSuggestion": "Edit suggestion",
-    "viewDetails": "View details"
+    "viewDetails": "View details",
+    "yourRequest": "Your request"
   },
   "validation": {
     "required": "Required",

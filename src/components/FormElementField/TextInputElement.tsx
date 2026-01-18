@@ -1,8 +1,8 @@
-import { InputAdornment, TextField } from '@mui/material'
-import type { TextFieldElementProps } from './types'
+import { InputAdornment, TextField } from '@mui/material';
+import type { TextFieldElementProps } from './types';
 
 // Fields that should always be LTR regardless of language (numeric/standard formats)
-const LTR_FIELDS = ['phone', 'id', 'email']
+const LTR_FIELDS = ['phone', 'id', 'email'];
 
 export default function TextInputElement({
     element,
@@ -16,10 +16,10 @@ export default function TextInputElement({
     onBlur,
     onFocus,
 }: TextFieldElementProps) {
-    const shouldForceLtr = LTR_FIELDS.includes(element.type)
-    const inputDir = shouldForceLtr ? 'ltr' : undefined
-    const inputAlign = shouldForceLtr && isRtl ? 'right' : undefined
-    const errorId = errorMessage ? `${element.id}-error` : undefined
+    const shouldForceLtr = LTR_FIELDS.includes(element.type);
+    const inputDir = shouldForceLtr ? 'ltr' : undefined;
+    const inputAlign = shouldForceLtr && isRtl ? 'right' : undefined;
+    const errorId = errorMessage ? `${element.id}-error` : undefined;
 
     return (
         <TextField
@@ -64,5 +64,5 @@ export default function TextInputElement({
             size="small"
             aria-label={label}
         />
-    )
+    );
 }

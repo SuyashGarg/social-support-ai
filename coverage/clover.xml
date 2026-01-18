@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coverage generated="1768735640666" clover="3.2.0">
+  <project timestamp="1768735640667" name="All files">
+    <metrics statements="97" coveredstatements="97" conditionals="86" coveredconditionals="80" methods="19" coveredmethods="19" elements="202" coveredelements="196" complexity="0" loc="97" ncloc="97" packages="8" files="11" classes="11"/>
+    <package name="src">
+      <metrics statements="2" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
+      <file name="theme.ts" path="/Users/suyash/Desktop/Workspace/social-support-ai/src/theme.ts">
+        <metrics statements="2" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
+        <line num="3" count="2" type="stmt"/>
+        <line num="26" count="11" type="stmt"/>
+      </file>
+    </package>
+    <package name="src.App">
+      <metrics statements="1" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+      <file name="styles.ts" path="/Users/suyash/Desktop/Workspace/social-support-ai/src/App/styles.ts">
+        <metrics statements="1" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="3" count="1" type="stmt"/>
+      </file>
+    </package>
+    <package name="src.assets">
+      <metrics statements="0" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+      <file name="logo.png" path="/Users/suyash/Desktop/Workspace/social-support-ai/src/assets/logo.png">
+        <metrics statements="0" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+      </file>
+    </package>
+    <package name="src.common">
+      <metrics statements="47" coveredstatements="47" conditionals="36" coveredconditionals="35" methods="12" coveredmethods="12"/>
+      <file name="storage.ts" path="/Users/suyash/Desktop/Workspace/social-support-ai/src/common/storage.ts">
+        <metrics statements="23" coveredstatements="23" conditionals="14" coveredconditionals="14" methods="5" coveredmethods="5"/>
+        <line num="23" count="1" type="stmt"/>
+        <line num="31" count="1" type="stmt"/>
+        <line num="32" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="33" count="2" type="stmt"/>
+        <line num="34" count="2" type="stmt"/>
+        <line num="41" count="1" type="stmt"/>
+        <line num="42" count="4" type="cond" truecount="2" falsecount="0"/>
+        <line num="43" count="3" type="stmt"/>
+        <line num="44" count="3" type="stmt"/>
+        <line num="45" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="47" count="1" type="stmt"/>
+        <line num="54" count="1" type="stmt"/>
+        <line num="55" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="56" count="2" type="stmt"/>
+        <line num="63" count="1" type="stmt"/>
+        <line num="64" count="4" type="cond" truecount="2" falsecount="0"/>
+        <line num="65" count="3" type="stmt"/>
+        <line num="66" count="3" type="stmt"/>
+        <line num="67" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="69" count="1" type="stmt"/>
+        <line num="76" count="1" type="stmt"/>
+        <line num="77" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="78" count="2" type="stmt"/>
+      </file>
+      <file name="utils.ts" path="/Users/suyash/Desktop/Workspace/social-support-ai/src/common/utils.ts">
+        <metrics statements="24" coveredstatements="24" conditionals="22" coveredconditionals="21" methods="7" coveredmethods="7"/>
+        <line num="1" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="3" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="5" count="1" type="stmt"/>
+        <line num="6" count="5" type="stmt"/>
+        <line num="7" count="5" type="stmt"/>
+        <line num="8" count="5" type="cond" truecount="2" falsecount="0"/>
+        <line num="9" count="5" type="cond" truecount="2" falsecount="0"/>
+        <line num="10" count="5" type="cond" truecount="2" falsecount="0"/>
+        <line num="11" count="5" type="cond" truecount="2" falsecount="0"/>
+        <line num="12" count="5" type="stmt"/>
+        <line num="15" count="3" type="stmt"/>
+        <line num="23" count="1" type="stmt"/>
+        <line num="24" count="7" type="stmt"/>
+        <line num="26" count="7" type="cond" truecount="2" falsecount="0"/>
+        <line num="29" count="5" type="cond" truecount="2" falsecount="0"/>
+        <line num="30" count="1" type="stmt"/>
+        <line num="34" count="4" type="cond" truecount="2" falsecount="0"/>
+        <line num="35" count="1" type="stmt"/>
+        <line num="40" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="41" count="7" type="stmt"/>
+        <line num="52" count="7" type="cond" truecount="1" falsecount="1"/>
+        <line num="53" count="7" type="stmt"/>
+        <line num="56" count="9" type="stmt"/>
+        <line num="58" count="6" type="stmt"/>
+      </file>
+    </package>
+    <package name="src.components">
+      <metrics statements="21" coveredstatements="21" conditionals="20" coveredconditionals="20" methods="2" coveredmethods="2"/>
+      <file name="PageHeader.tsx" path="/Users/suyash/Desktop/Workspace/social-support-ai/src/components/PageHeader.tsx">
+        <metrics statements="21" coveredstatements="21" conditionals="20" coveredconditionals="20" methods="2" coveredmethods="2"/>
+        <line num="9" count="10" type="stmt"/>
+        <line num="11" count="10" type="stmt"/>
+        <line num="12" count="10" type="cond" truecount="4" falsecount="0"/>
+        <line num="14" count="10" type="stmt"/>
+        <line num="16" count="3" type="cond" truecount="4" falsecount="0"/>
+        <line num="17" count="1" type="stmt"/>
+        <line num="19" count="3" type="stmt"/>
+        <line num="20" count="10" type="cond" truecount="2" falsecount="0"/>
+        <line num="23" count="9" type="stmt"/>
+        <line num="29" count="9" type="stmt"/>
+        <line num="32" count="7" type="stmt"/>
+        <line num="42" count="10" type="cond" truecount="2" falsecount="0"/>
+        <line num="45" count="7" type="stmt"/>
+        <line num="46" count="7" type="stmt"/>
+        <line num="48" count="10" type="cond" truecount="2" falsecount="0"/>
+        <line num="49" count="10" type="cond" truecount="2" falsecount="0"/>
+        <line num="50" count="7" type="stmt"/>
+        <line num="51" count="7" type="stmt"/>
+        <line num="55" count="10" type="cond" truecount="2" falsecount="0"/>
+        <line num="60" count="10" type="cond" truecount="2" falsecount="0"/>
+        <line num="62" count="10" type="stmt"/>
+      </file>
+    </package>
+    <package name="src.context">
+      <metrics statements="13" coveredstatements="13" conditionals="14" coveredconditionals="12" methods="3" coveredmethods="3"/>
+      <file name="LanguageContext.tsx" path="/Users/suyash/Desktop/Workspace/social-support-ai/src/context/LanguageContext.tsx">
+        <metrics statements="13" coveredstatements="13" conditionals="14" coveredconditionals="12" methods="3" coveredmethods="3"/>
+        <line num="29" count="3" type="stmt"/>
+        <line num="31" count="19" type="stmt"/>
+        <line num="32" count="19" type="cond" truecount="3" falsecount="1"/>
+        <line num="34" count="19" type="stmt"/>
+        <line num="35" count="18" type="stmt"/>
+        <line num="36" count="18" type="stmt"/>
+        <line num="38" count="19" type="cond" truecount="4" falsecount="0"/>
+        <line num="39" count="19" type="cond" truecount="3" falsecount="1"/>
+        <line num="41" count="19" type="stmt"/>
+        <line num="45" count="21" type="stmt"/>
+        <line num="46" count="21" type="cond" truecount="2" falsecount="0"/>
+        <line num="47" count="2" type="stmt"/>
+        <line num="48" count="19" type="stmt"/>
+      </file>
+    </package>
+    <package name="src.i18n">
+      <metrics statements="1" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+      <file name="ar.json" path="/Users/suyash/Desktop/Workspace/social-support-ai/src/i18n/ar.json">
+        <metrics statements="0" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+      </file>
+      <file name="en.json" path="/Users/suyash/Desktop/Workspace/social-support-ai/src/i18n/en.json">
+        <metrics statements="0" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+      </file>
+      <file name="index.ts" path="/Users/suyash/Desktop/Workspace/social-support-ai/src/i18n/index.ts">
+        <metrics statements="1" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="6" count="1" type="stmt"/>
+      </file>
+    </package>
+    <package name="src.providers">
+      <metrics statements="12" coveredstatements="12" conditionals="16" coveredconditionals="13" methods="1" coveredmethods="1"/>
+      <file name="AppThemeProvider.tsx" path="/Users/suyash/Desktop/Workspace/social-support-ai/src/providers/AppThemeProvider.tsx">
+        <metrics statements="12" coveredstatements="12" conditionals="16" coveredconditionals="13" methods="1" coveredmethods="1"/>
+        <line num="28" count="2" type="stmt"/>
+        <line num="33" count="2" type="stmt"/>
+        <line num="38" count="12" type="stmt"/>
+        <line num="39" count="12" type="stmt"/>
+        <line num="40" count="12" type="cond" truecount="4" falsecount="0"/>
+        <line num="41" count="12" type="stmt"/>
+        <line num="42" count="12" type="cond" truecount="4" falsecount="0"/>
+        <line num="45" count="12" type="stmt"/>
+        <line num="46" count="12" type="stmt"/>
+        <line num="47" count="12" type="cond" truecount="2" falsecount="2"/>
+        <line num="49" count="12" type="cond" truecount="3" falsecount="1"/>
+        <line num="50" count="12" type="stmt"/>
+      </file>
+    </package>
+  </project>
+</coverage>

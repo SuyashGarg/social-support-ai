@@ -1,10 +1,10 @@
-import { DatePicker } from '@mui/x-date-pickers/DatePicker'
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
-import dayjs, { Dayjs } from 'dayjs'
-import 'dayjs/locale/ar'
-import 'dayjs/locale/en'
-import type { FormElement } from '../../types/form'
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import dayjs, { Dayjs } from 'dayjs';
+import 'dayjs/locale/ar';
+import 'dayjs/locale/en';
+import type { FormElement } from '../../types/form';
 
 type Props = {
     element: FormElement
@@ -29,15 +29,15 @@ export default function DatePickerElement({
     onChange,
     onBlur,
 }: Props) {
-    const locale = isRtl ? 'ar' : 'en'
-    const maxDate = element.allowFuture === false ? dayjs() : undefined
-    const dateValue = value ? dayjs(value) : null
+    const locale = isRtl ? 'ar' : 'en';
+    const maxDate = element.allowFuture === false ? dayjs() : undefined;
+    const dateValue = value ? dayjs(value) : null;
 
     const handleChange = (newValue: Dayjs | null) => {
-        onChange(newValue ? newValue.format('YYYY-MM-DD') : '')
-    }
+        onChange(newValue ? newValue.format('YYYY-MM-DD') : '');
+    };
 
-    const errorId = errorMessage ? `${element.id}-error` : undefined
+    const errorId = errorMessage ? `${element.id}-error` : undefined;
 
     return (
         <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={locale}>
@@ -78,5 +78,5 @@ export default function DatePickerElement({
                 }}
             />
         </LocalizationProvider>
-    )
+    );
 }

@@ -26,7 +26,8 @@
     "name": "الاسم",
     "email": "البريد الإلكتروني",
     "editSuggestion": "تعديل الاقتراح",
-    "viewDetails": "عرض التفاصيل"
+    "viewDetails": "عرض التفاصيل",
+    "yourRequest": "طلبك"
   },
   "validation": {
     "required": "مطلوب",

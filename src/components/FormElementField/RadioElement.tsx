@@ -1,5 +1,5 @@
-import { FormControl, FormControlLabel, FormHelperText, FormLabel, Radio, RadioGroup } from '@mui/material'
-import type { FormElement } from '../../types/form'
+import { FormControl, FormControlLabel, FormHelperText, FormLabel, Radio, RadioGroup } from '@mui/material';
+import type { FormElement } from '../../types/form';
 
 type Props = {
     element: FormElement
@@ -22,8 +22,8 @@ export default function RadioElement({
     onBlur,
     renderOptionLabel,
 }: Props) {
-    const errorId = errorMessage ? `${element.id}-error` : undefined
-    const labelId = `${element.id}-label`
+    const errorId = errorMessage ? `${element.id}-error` : undefined;
+    const labelId = `${element.id}-label`;
 
     return (
         <FormControl
@@ -67,5 +67,5 @@ export default function RadioElement({
                 </FormHelperText>
             ) : null}
         </FormControl>
-    )
+    );
 }
