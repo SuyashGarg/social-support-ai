@@ -37,6 +37,8 @@ export default function DatePickerElement({
         onChange(newValue ? newValue.format('YYYY-MM-DD') : '')
     }
 
+    const errorId = errorMessage ? `${element.id}-error` : undefined
+
     return (
         <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={locale}>
             <DatePicker
@@ -52,13 +54,23 @@ export default function DatePickerElement({
                         placeholder: placeholder,
                         required: required,
                         error: Boolean(errorMessage),
-                        helperText: errorMessage ?? ' ',
+                        helperText: errorMessage || undefined,
                         fullWidth: true,
                         size: 'small',
                         onBlur: onBlur,
                         InputLabelProps: {
                             required,
                         },
+                        inputProps: {
+                            'aria-describedby': errorId,
+                            'aria-required': required || undefined,
+                            'aria-invalid': Boolean(errorMessage) || undefined,
+                        },
+                        FormHelperTextProps: {
+                            id: errorId,
+                            role: errorMessage ? 'alert' : undefined,
+                        },
+                        'aria-label': label,
                     },
                     actionBar: {
                         actions: ['clear', 'today'],

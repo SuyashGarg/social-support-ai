@@ -24,7 +24,9 @@
     "noHistory": "لا يوجد سجل.",
     "serialNo": "الرقم",
     "name": "الاسم",
-    "email": "البريد الإلكتروني"
+    "email": "البريد الإلكتروني",
+    "editSuggestion": "تعديل الاقتراح",
+    "viewDetails": "عرض التفاصيل"
   },
   "validation": {
     "required": "مطلوب",

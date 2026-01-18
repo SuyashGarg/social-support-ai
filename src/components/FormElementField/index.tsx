@@ -11,26 +11,20 @@ import RadioElement from './RadioElement'
 import AutocompleteElement from './AutocompleteElement'
 import DatePickerElement from './DatePickerElement'
 import { useLanguage } from '../../context/LanguageContext'
+import { useForm } from '../MultiStepForm/MultiStepFormContext'
 
 type Props = {
   element: FormElement
   value: string | boolean | undefined
-  formData: Record<string, string | boolean>
   errorMessage?: string | null
-  onChange: (name: string, value: string | boolean) => void
-  onMetaChange?: (name: string, meta: Record<string, string | null>) => void
-  onBlur?: (element: FormElement, value: string | boolean | undefined) => void
 }
 
 export default function FormElementField({
   element,
   value,
-  formData,
   errorMessage,
-  onChange,
-  onMetaChange,
-  onBlur,
 }: Props) {
+  const { formData, onChange, onMetaChange, onBlur } = useForm()
   const { t } = useTranslation();
   const { isRtl } = useLanguage();
   const label = t(element.labelKey);
@@ -151,9 +145,6 @@ export default function FormElementField({
           }
           required={element.required}
           errorMessage={errorMessage}
-          onValueChange={(name, nextValue) => onChange(name, nextValue ?? '')}
-          onMetaChange={(meta) => onMetaChange?.(element.name, meta)}
-          onBlur={() => handleBlur()}
         />
       )
     case 'checkbox':
@@ -162,6 +153,8 @@ export default function FormElementField({
           element={element}
           label={label}
           checked={Boolean(value)}
+          required={element.required}
+          errorMessage={errorMessage}
           onChange={(event) => onChange(element.name, event.target.checked)}
           onBlur={() => handleBlur(Boolean(value))}
         />

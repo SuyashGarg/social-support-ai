@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 import { isValidPhoneNumber } from 'libphonenumber-js';
 import { useTranslation } from 'react-i18next';
 import type { FormElement } from '../../types/form';
-import { formatNationalId, isEmailValid, isNationalIdValid, normalizePhone } from '../../common/utils';
+import { formatNationalId, isEmailValid, isNationalIdValid, normalizePhoneForValidation } from '../../common/utils';
 
 export const useFieldValidation = (
     element: FormElement,
@@ -27,7 +27,8 @@ export const useFieldValidation = (
             }
 
             if (name === 'phone' && typeof nextValue === 'string' && nextValue) {
-                const normalized = normalizePhone(nextValue);
+                const countryCode = formData.countryCode as string | undefined;
+                const normalized = normalizePhoneForValidation(nextValue, countryCode);
                 return normalized && isValidPhoneNumber(normalized) ? null : t('validation.invalidPhone');
             }
 

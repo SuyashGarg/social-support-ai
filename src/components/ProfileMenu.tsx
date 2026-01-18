@@ -43,13 +43,14 @@ export default function ProfileMenu() {
                 onClose={handleMenuClose}
                 anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
                 transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+                aria-label={t('app.profile')}
             >
-                <MenuItem onClick={handleHistoryClick}>
-                    <HistoryIcon fontSize="small" sx={{ mr: 1 }} />
+                <MenuItem onClick={handleHistoryClick} aria-label={t('app.history')}>
+                    <HistoryIcon fontSize="small" sx={{ mr: 1 }} aria-hidden="true" />
                     {t('app.history')}
                 </MenuItem>
-                <MenuItem onClick={handleLogoutClick}>
-                    <LogoutIcon fontSize="small" sx={{ mr: 1 }} />
+                <MenuItem onClick={handleLogoutClick} aria-label={t('app.logout')}>
+                    <LogoutIcon fontSize="small" sx={{ mr: 1 }} aria-hidden="true" />
                     {t('app.logout')}
                 </MenuItem>
             </Menu>

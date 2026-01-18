@@ -1,3 +1,20 @@
+/**
+ * LanguageContext - Internationalization and RTL Management
+ * 
+ * ARCHITECTURE DECISION: Centralized language state with RTL detection
+ * 
+ * Rationale:
+ * - Single source of truth for current language
+ * - Automatic RTL detection for Arabic
+ * - Integrates with i18next for translations
+ * - Used by theme provider for direction switching
+ * 
+ * Features:
+ * - Language persistence (reads from i18next on mount)
+ * - Automatic i18next language change on state update
+ * - Computed isRtl flag for conditional rendering
+ * - Memoized context value to prevent unnecessary re-renders
+ */
 import { createContext, useContext, useEffect, useMemo, useState } from 'react'
 import type { ReactNode } from 'react'
 import type { Language } from '../types/form'

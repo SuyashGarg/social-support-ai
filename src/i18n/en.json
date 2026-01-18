@@ -24,7 +24,9 @@
     "noHistory": "No history available.",
     "serialNo": "S.No",
     "name": "Name",
-    "email": "Email"
+    "email": "Email",
+    "editSuggestion": "Edit suggestion",
+    "viewDetails": "View details"
   },
   "validation": {
     "required": "Required",

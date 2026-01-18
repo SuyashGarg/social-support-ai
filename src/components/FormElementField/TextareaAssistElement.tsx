@@ -10,12 +10,15 @@ import {
     DialogTitle,
     Snackbar,
     TextField,
+    Typography,
 } from '@mui/material'
 import { useTranslation } from 'react-i18next'
 import type { FormElement } from '../../types/form'
 import { generateTextFromOpenAI } from '../../api/axios'
 import TextareaElement from './TextareaElement'
 import { textareaAssistStyles as styles } from './TextareaAssistElement.styles'
+import { useLanguage } from '../../context/LanguageContext'
+import { getDir } from '../../common/utils'
 
 type Props = {
     element: FormElement
@@ -39,6 +42,7 @@ export default function TextareaAssistElement({
     onBlur,
 }: Props) {
     const { t } = useTranslation()
+    const { isRtl } = useLanguage()
     const [isDialogOpen, setIsDialogOpen] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
     const [isEditing, setIsEditing] = useState(false)
@@ -102,17 +106,30 @@ export default function TextareaAssistElement({
             />
 
             <Box sx={styles.buttonRow}>
-                <Button
-                    variant="outlined"
-                    size="small"
+                <Typography
+                    component="span"
                     onClick={handleHelpClick}
-                    disabled={isLoading}
                     aria-label={t('app.helpMeWrite')}
-                    sx={styles.helpButton}
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault()
+                            handleHelpClick()
+                        }
+                    }}
+                    sx={{
+                        ...styles.helpLink,
+                        cursor: isLoading ? 'not-allowed' : 'pointer',
+                        opacity: isLoading ? 0.6 : 1,
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: 1,
+                    }}
                 >
-                    {isLoading ? <CircularProgress size={16} sx={{ mr: 1 }} /> : null}
+                    {isLoading ? <CircularProgress size={16} aria-hidden="true" /> : null}
                     {t('app.helpMeWrite')}
-                </Button>
+                </Typography>
             </Box>
 
             <Snackbar
@@ -136,29 +153,53 @@ export default function TextareaAssistElement({
                 fullWidth
                 maxWidth="sm"
                 aria-labelledby={`${element.id}-suggestion-title`}
+                dir={getDir(isRtl)}
             >
-                <DialogTitle id={`${element.id}-suggestion-title`}>{t('app.suggestion')}</DialogTitle>
-                <DialogContent>
-                    {!isEditing ? (<Box>{suggestion}</Box>) : (<TextField
-                        multiline
-                        minRows={6}
-                        fullWidth
-                        value={suggestion}
-                        onChange={handleSuggestionChange}
-                        placeholder={t('app.generating')}
-                        disabled={isLoading}
-                        InputProps={{ readOnly: !isEditing }}
-                        sx={styles.dialogField}
-                    />)}
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleDialogClose}>{t('app.discard')}</Button>
+                <DialogTitle id={`${element.id}-suggestion-title`} dir={getDir(isRtl)}>
+                    {t('app.suggestion')}
+                </DialogTitle>
+                <DialogContent dir={getDir(isRtl)}>
                     {!isEditing ? (
-                        <Button onClick={handleEdit} disabled={isLoading || !suggestion}>
+                        <Box dir={getDir(isRtl)}>{suggestion}</Box>
+                    ) : (
+                        <TextField
+                            multiline
+                            minRows={6}
+                            fullWidth
+                            value={suggestion}
+                            onChange={handleSuggestionChange}
+                            placeholder={t('app.generating')}
+                            disabled={isLoading}
+                            InputProps={{ readOnly: !isEditing }}
+                            sx={styles.dialogField}
+                            dir={getDir(isRtl)}
+                            aria-label={t('app.editSuggestion')}
+                            aria-describedby={`${element.id}-suggestion-title`}
+                        />
+                    )}
+                </DialogContent>
+                <DialogActions dir={getDir(isRtl)}>
+                    <Button
+                        onClick={handleDialogClose}
+                        aria-label={t('app.discard')}
+                    >
+                        {t('app.discard')}
+                    </Button>
+                    {!isEditing ? (
+                        <Button
+                            onClick={handleEdit}
+                            disabled={isLoading || !suggestion}
+                            aria-label={t('app.edit')}
+                        >
                             {t('app.edit')}
                         </Button>
                     ) : null}
-                    <Button onClick={handleAccept} disabled={isLoading || !suggestion} variant="contained">
+                    <Button
+                        onClick={handleAccept}
+                        disabled={isLoading || !suggestion}
+                        variant="contained"
+                        aria-label={t('app.accept')}
+                    >
                         {t('app.accept')}
                     </Button>
                 </DialogActions>

@@ -41,6 +41,7 @@ export default function LanguageSwitch() {
           }}
           onClick={() => setLanguage('en')}
           aria-pressed={language === 'en'}
+          aria-current={language === 'en' ? 'true' : undefined}
         >
           EN
         </Button>
@@ -53,6 +54,7 @@ export default function LanguageSwitch() {
           }}
           onClick={() => setLanguage('ar')}
           aria-pressed={language === 'ar'}
+          aria-current={language === 'ar' ? 'true' : undefined}
         >
           AR
         </Button>

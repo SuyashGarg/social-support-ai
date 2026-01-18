@@ -11,6 +11,8 @@ export default function TextareaElement({
     onChange,
     onBlur,
 }: TextareaFieldElementProps) {
+    const errorId = errorMessage ? `${element.id}-error` : undefined
+
     return (
         <TextField
             id={element.id}
@@ -24,10 +26,20 @@ export default function TextareaElement({
             multiline
             minRows={4}
             InputLabelProps={{ required }}
+            inputProps={{
+                'aria-describedby': errorId,
+                'aria-required': required || undefined,
+                'aria-invalid': Boolean(errorMessage) || undefined,
+            }}
             error={Boolean(errorMessage)}
-            helperText={errorMessage ?? ' '}
+            helperText={errorMessage || undefined}
+            FormHelperTextProps={{
+                id: errorId,
+                role: errorMessage ? 'alert' : undefined,
+            }}
             fullWidth
             size="small"
+            aria-label={label}
         />
     )
 }

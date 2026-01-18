@@ -19,6 +19,7 @@ export default function TextInputElement({
     const shouldForceLtr = LTR_FIELDS.includes(element.type)
     const inputDir = shouldForceLtr ? 'ltr' : undefined
     const inputAlign = shouldForceLtr && isRtl ? 'right' : undefined
+    const errorId = errorMessage ? `${element.id}-error` : undefined
 
     return (
         <TextField
@@ -37,6 +38,9 @@ export default function TextInputElement({
                 inputMode: element.inputMode,
                 dir: inputDir,
                 style: inputAlign ? { textAlign: inputAlign } : undefined,
+                'aria-describedby': errorId,
+                'aria-required': required || undefined,
+                'aria-invalid': Boolean(errorMessage) || undefined,
             }}
             InputLabelProps={{
                 required,
@@ -51,9 +55,14 @@ export default function TextInputElement({
                     : undefined
             }
             error={Boolean(errorMessage)}
-            helperText={errorMessage ?? ' '}
+            helperText={errorMessage || undefined}
+            FormHelperTextProps={{
+                id: errorId,
+                role: errorMessage ? 'alert' : undefined,
+            }}
             fullWidth
             size="small"
+            aria-label={label}
         />
     )
 }

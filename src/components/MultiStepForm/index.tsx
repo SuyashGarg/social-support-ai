@@ -1,17 +1,37 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+/**
+ * MultiStepForm - Multi-Step Form Component with URL-based Navigation
+ * 
+ * ARCHITECTURE DECISION: URL-based step navigation (/step/:stepIndex)
+ * 
+ * Rationale:
+ * - Enables deep linking to specific steps
+ * - Browser back/forward navigation works naturally
+ * - Better UX for long forms
+ * - Progress tracking and validation per step
+ * 
+ * Navigation Logic:
+ * - Validates current step before allowing progression
+ * - Redirects to last completed step if navigating directly to later step
+ * - Clears session data when starting fresh (navigating to step 0)
+ * - Tracks navigation source to avoid clearing on back button
+ * 
+ * Session Management:
+ * - Form data persists in localStorage
+ * - Cleared only when explicitly starting new form
+ * - Survives page refresh
+ */
+import { useEffect, useMemo, useRef } from 'react'
 import { Box, Button, CircularProgress } from '@mui/material'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
-import { isValidPhoneNumber } from 'libphonenumber-js'
-import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
 import type { FormStep } from '../../types/form'
 import FormStepCard from '../FormStepCard'
 import { multiStepFormStyles as styles } from './styles'
 import { useLanguage } from '../../context/LanguageContext'
-import { isEmailValid, isNationalIdValid, normalizePhone } from '../../common/utils'
-import { mockSubmitForm } from '../../api/axios'
-import { addHistoryEntry } from '../../common/history'
+import { FormProvider, useMultiStepForm } from './MultiStepFormContext'
+import { useFocusManager } from './useFocusManager'
+import { clearSessionData } from '../../common/storage'
 
 type Props = {
   steps: FormStep[]
@@ -21,29 +41,31 @@ type Props = {
   submitLabel: string
 }
 
-export default function MultiStepForm({
+function MultiStepFormContent({
   steps,
   stepLabel,
   backLabel,
   nextLabel,
   submitLabel,
 }: Props) {
-  const { isRtl, language } = useLanguage();
-  const { t } = useTranslation();
-  const navigate = useNavigate();
-  const { stepIndex: stepParam } = useParams<{ stepIndex: string }>();
-  const [formData, setFormData] = useState<Record<string, string | boolean>>(() => {
-    if (typeof window === 'undefined') return {};
-    try {
-      const stored = window.localStorage.getItem('socialSupportFormData');
-      return stored ? (JSON.parse(stored) as Record<string, string | boolean>) : {};
-    } catch {
-      return {};
-    }
-  });
-  const [formErrors, setFormErrors] = useState<Record<string, string | null>>({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const prevCountryCodeRef = useRef<string | boolean | undefined>(undefined);
+  const { isRtl } = useLanguage()
+  const navigate = useNavigate()
+  const { stepIndex: stepParam } = useParams<{ stepIndex: string }>()
+  const {
+    formData,
+    formErrors,
+    isSubmitting,
+    validateCurrentStep,
+    handleSubmit,
+    isStepComplete,
+    getLastCompletedStepIndex,
+  } = useMultiStepForm()
+
+  // Track navigation source to avoid clearing storage on back button or redirect
+  const isBackNavigationRef = useRef(false)
+  const isRedirectNavigationRef = useRef(false)
+  const previousStepIndexRef = useRef<number | null>(null)
+  const isInitialMountRef = useRef(true)
 
   const stepIndex = useMemo(() => {
     const parsed = Number(stepParam)
@@ -53,58 +75,33 @@ export default function MultiStepForm({
   }, [stepParam, steps.length])
 
   const step = useMemo(() => steps[stepIndex], [steps, stepIndex])
+
+  const { focusOnStep } = useFocusManager({
+    step,
+    formErrors,
+    stepIndex,
+    enabled: true,
+  })
   const isLastStep = stepIndex === steps.length - 1
   const isConsentChecked = Boolean(formData.consent)
   const hasSessionData = useMemo(() => Object.keys(formData).length > 0, [formData])
+  const previousStepIndexForScrollRef = useRef<number | null>(null)
 
   useEffect(() => {
-    setFormData((prev) => {
-      let changed = false
-      const next = { ...prev }
-
-      if (typeof prev.country === 'undefined') {
-        next.country = t('fields.profile.countryAE')
-        next.countryCode = 'AE'
-        changed = true
-      }
-
-      if (typeof prev.dependents === 'undefined') {
-        next.dependents = '0'
-        changed = true
-      }
-
-      return changed ? next : prev
-    })
-  }, [t])
-
-  useEffect(() => {
-    if (typeof window === 'undefined') return
-    window.localStorage.setItem('socialSupportFormData', JSON.stringify(formData))
-  }, [formData])
-
-  // Clear state and address when countryCode changes
-  useEffect(() => {
-    const currentCountryCode = formData.countryCode
-    const prevCountryCode = prevCountryCodeRef.current
-
-    if (currentCountryCode !== prevCountryCode && currentCountryCode !== undefined && prevCountryCode !== undefined) {
-      setFormData((prev) => ({
-        ...prev,
-        state: '',
-        stateCode: '',
-        statePlaceId: '',
-        address: '',
-        addressPlaceId: '',
-        city: '',
-      }))
+    // Only scroll to top when step actually changes, not on every render
+    const prevStep = previousStepIndexForScrollRef.current
+    if (prevStep !== null && prevStep !== stepIndex) {
+      window.scrollTo({ top: 0, behavior: 'smooth' })
     }
+    previousStepIndexForScrollRef.current = stepIndex
 
-    prevCountryCodeRef.current = currentCountryCode
-  }, [formData.countryCode])
-
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' })
-  }, [stepIndex])
+    // Focus on step after navigation
+    // Use setTimeout to ensure DOM is updated after navigation
+    const timeoutId = setTimeout(() => {
+      focusOnStep()
+    }, 100)
+    return () => clearTimeout(timeoutId)
+  }, [stepIndex, focusOnStep])
 
   useEffect(() => {
     const parsed = Number(stepParam)
@@ -113,213 +110,96 @@ export default function MultiStepForm({
     }
   }, [navigate, stepIndex, stepParam, steps.length])
 
+  // Check if previous steps are complete when navigating directly to a step
   useEffect(() => {
     if (stepIndex > 0 && Object.keys(formData).length === 0) {
-      navigate('/step/0', { replace: true });
+      isRedirectNavigationRef.current = true
+      navigate('/step/0', { replace: true })
+      return
     }
-  }, [formData, navigate, stepIndex]);
 
-  const handleChange = useCallback((name: string, value: string | boolean) => {
-    setFormData((prev) => {
-      const next = { ...prev, [name]: value };
-      debugger;
-
-      // When country changes, clear state and address fields
-      if (name === 'country') {
-        // Clear state field and related metadata
-        next.state = '';
-        next.stateCode = '';
-        next.statePlaceId = '';
-
-        // Clear address field and related metadata
-        next.address = '';
-        next.addressPlaceId = '';
-        next.city = '';
-      }
-
-      return next;
-    });
-    setFormErrors((prev) => {
-      const next = prev[name] ? { ...prev, [name]: null } : prev;
-
-      // Clear errors for state and address when country changes
-      if (name === 'country') {
-        if (prev.state) next.state = null;
-        if (prev.address) next.address = null;
-      }
-
-      return next;
-    });
-  }, []);
-
-  const handleMetaChange = useCallback((name: string, meta: Record<string, string | null>) => {
-    setFormData((prev) => {
-      const next = { ...prev };
-
-      // Update metadata fields based on field type
-      if (name === 'country') {
-        next.countryCode = meta.countryCode ?? '';
-        next.countryPlaceId = meta.placeId ?? '';
-
-        // When country metadata changes (countryCode updates), clear state and address
-        if (meta.countryCode !== prev.countryCode) {
-          next.state = '';
-          next.stateCode = '';
-          next.statePlaceId = '';
-          next.address = '';
-          next.addressPlaceId = '';
-          next.city = '';
-        }
-      } else if (name === 'state') {
-        next.stateCode = meta.stateCode ?? '';
-        next.statePlaceId = meta.placeId ?? '';
-      } else if (name === 'address') {
-        next.addressPlaceId = meta.placeId ?? '';
-
-        // Populate city and state fields if available from address
-        if (meta.city) {
-          next.city = meta.city;
-        }
-        if (meta.state) {
-          next.state = meta.state;
-          // Also update state metadata if stateCode is available
-          if (meta.stateCode) {
-            next.stateCode = meta.stateCode;
-          }
+    // Check if previous steps are complete when navigating directly to a step
+    if (stepIndex > 0) {
+      // Check all previous steps
+      for (let i = 0; i < stepIndex; i++) {
+        if (!isStepComplete(steps[i], formData)) {
+          // Find the last completed step and redirect there
+          const lastCompletedStep = getLastCompletedStepIndex(formData)
+          const redirectStep = lastCompletedStep >= 0 ? lastCompletedStep : 0
+          isRedirectNavigationRef.current = true
+          navigate(`/step/${redirectStep}`, { replace: true })
+          return
         }
       }
+    }
+  }, [formData, navigate, stepIndex, steps, isStepComplete, getLastCompletedStepIndex])
 
-      return next;
-    });
-  }, []);
-
-  const validateField = useCallback((name: string, value: string | boolean | undefined, required?: boolean) => {
-    if (required && (!value || String(value).trim() === '')) {
-      return t('validation.required');
-    }
-    if (name === 'nationalId' && typeof value === 'string' && value) {
-      return isNationalIdValid(value) ? null : t('validation.invalidDocumentNumber');
-    }
-    if (name === 'email' && typeof value === 'string' && value) {
-      return isEmailValid(value) ? null : t('validation.invalidEmail');
-    }
-    if (name === 'phone' && typeof value === 'string' && value) {
-      const normalized = normalizePhone(value);
-      return normalized && isValidPhoneNumber(normalized) ? null : t('validation.invalidPhone');
-    }
-    return null;
-  }, [t])
-
-  // Re-translate existing error messages when language changes
+  // Clear storage when navigating to step 0 directly (not from back button or redirect)
   useEffect(() => {
-    setFormErrors((prev) => {
-      // Only update fields that already have errors
-      const fieldsWithErrors = Object.keys(prev).filter((name) => prev[name] !== null);
-      if (fieldsWithErrors.length === 0) return prev;
+    const prevStep = previousStepIndexRef.current
+    const isInitialMount = isInitialMountRef.current
 
-      const updated = { ...prev };
-      let hasChanges = false;
-
-      steps.forEach((step) => {
-        step.elements.forEach((element) => {
-          // Only re-validate fields that already have errors
-          if (fieldsWithErrors.includes(element.name)) {
-            const currentValue = formData[element.name];
-            const error = validateField(element.name, currentValue, element.required);
-            if (updated[element.name] !== error) {
-              updated[element.name] = error;
-              hasChanges = true;
-            }
-          }
-        });
-      });
-
-      return hasChanges ? updated : prev;
-    });
-  }, [language, validateField, steps, formData]);
-
-  const handleFieldBlur = useCallback(
-    (element: FormStep['elements'][number], value: string | boolean | undefined) => {
-      const error = validateField(element.name, value, element.required);
-      setFormErrors((prev) => ({ ...prev, [element.name]: error }));
-    },
-    [validateField],
-  );
-
-  const buildHistoryEntry = useCallback(
-    (data: Record<string, string | boolean>) => ({
-      id: `${Date.now()}`,
-      submittedAt: new Date().toISOString(),
-      data,
-    }),
-    [],
-  );
-
-  const handleSubmit = useCallback(async () => {
-    const errors: Record<string, string> = {};
-    steps.forEach((step) => {
-      step.elements.forEach((element) => {
-        const error = validateField(element.name, formData[element.name], element.required);
-        if (error) {
-          errors[element.name] = error;
-        }
-      });
-    });
-    setFormErrors(errors);
-    if (Object.keys(errors).length > 0) return;
-
-    setIsSubmitting(true);
-    try {
-      const response = await mockSubmitForm(formData);
-      if (typeof window !== 'undefined') {
-        window.localStorage.setItem('socialSupportFormResponse', JSON.stringify(response.data));
-      }
-      addHistoryEntry(buildHistoryEntry(response.data));
-      navigate('/review');
-    } finally {
-      setIsSubmitting(false);
+    // Skip on initial mount - let the redirect logic handle it
+    if (isInitialMount) {
+      isInitialMountRef.current = false
+      previousStepIndexRef.current = stepIndex
+      return
     }
-  }, [buildHistoryEntry, formData, navigate, steps, validateField]);
 
-  const handleBackClick = useCallback(() => {
+    // Clear storage only when:
+    // 1. Navigating to step 0
+    // 2. Not from back button
+    // 3. Not from redirect
+    // 4. Coming from outside (prevStep is null) or from a different step
+    if (
+      stepIndex === 0 &&
+      !isBackNavigationRef.current &&
+      !isRedirectNavigationRef.current &&
+      prevStep !== 0 // Only clear if coming from a different step (not already on step 0)
+    ) {
+      clearSessionData()
+    }
+
+    // Update previous step index
+    previousStepIndexRef.current = stepIndex
+
+    // Reset flags after checking (use setTimeout to ensure navigation completes)
+    setTimeout(() => {
+      isBackNavigationRef.current = false
+      isRedirectNavigationRef.current = false
+    }, 0)
+  }, [stepIndex])
+
+  const handleBackClick = () => {
+    isBackNavigationRef.current = true
     if (!hasSessionData) {
-      navigate('/step/0');
-      return;
+      navigate('/step/0')
+      return
     }
-    navigate(`/step/${Math.max(stepIndex - 1, 0)}`);
-  }, [hasSessionData, navigate, stepIndex]);
+    navigate(`/step/${Math.max(stepIndex - 1, 0)}`)
+  }
 
-  const validateCurrentStep = useCallback(() => {
-    const errors: Record<string, string | null> = {};
-    let hasErrors = false;
-
-    step.elements.forEach((element) => {
-      const error = validateField(element.name, formData[element.name], element.required);
-      if (error) {
-        errors[element.name] = error;
-        hasErrors = true;
-      }
-    });
-
-    if (hasErrors) {
-      setFormErrors((prev) => ({ ...prev, ...errors }));
-    }
-
-    return !hasErrors;
-  }, [formData, step.elements, validateField]);
-
-  const handleNextClick = useCallback(() => {
+  const handleNextClick = () => {
     if (!hasSessionData) {
-      navigate('/step/0');
-      return;
+      navigate('/step/0')
+      return
     }
 
-    if (!validateCurrentStep()) {
-      return;
+    if (!validateCurrentStep(step)) {
+      // If validation fails, focus on first error field (force focus)
+      setTimeout(() => {
+        focusOnStep(true)
+      }, 100)
+      return
     }
 
-    navigate(`/step/${stepIndex + 1}`);
-  }, [hasSessionData, navigate, stepIndex, validateCurrentStep]);
+    navigate(`/step/${stepIndex + 1}`)
+  }
+
+  const handleSubmitClick = async () => {
+    await handleSubmit()
+    navigate('/review')
+  }
 
   return (
     <>
@@ -327,15 +207,10 @@ export default function MultiStepForm({
         step={step}
         stepIndex={stepIndex}
         totalSteps={steps.length}
-        formData={formData}
-        formErrors={formErrors}
-        onChange={handleChange}
-        onMetaChange={handleMetaChange}
-        onBlur={handleFieldBlur}
         stepLabel={stepLabel}
       />
 
-      <Box sx={styles.formActions}>
+      <Box sx={styles.formActions} role="group" aria-label={stepLabel}>
         <Button
           variant="outlined"
           color="primary"
@@ -346,6 +221,7 @@ export default function MultiStepForm({
           onClick={handleBackClick}
           disabled={stepIndex === 0}
           startIcon={isRtl ? <ArrowForwardIcon /> : <ArrowBackIcon />}
+          aria-label={stepIndex === 0 ? undefined : `${backLabel} - ${stepLabel} ${stepIndex} / ${steps.length}`}
         >
           {backLabel}
         </Button>
@@ -354,11 +230,13 @@ export default function MultiStepForm({
             variant="contained"
             color="primary"
             sx={styles.button}
-            onClick={handleSubmit}
+            onClick={handleSubmitClick}
             disabled={!isConsentChecked || isSubmitting}
+            aria-label={isSubmitting ? undefined : submitLabel}
+            aria-busy={isSubmitting}
           >
             {isSubmitting ? (
-              <CircularProgress size={20} color="inherit" />
+              <CircularProgress size={20} color="inherit" aria-hidden="true" />
             ) : null}
             {submitLabel}
           </Button>
@@ -369,11 +247,20 @@ export default function MultiStepForm({
             sx={styles.button}
             onClick={handleNextClick}
             endIcon={isRtl ? <ArrowBackIcon /> : <ArrowForwardIcon />}
+            aria-label={`${nextLabel} - ${stepLabel} ${stepIndex + 2} / ${steps.length}`}
           >
             {nextLabel}
           </Button>
         )}
       </Box>
     </>
+  )
+}
+
+export default function MultiStepForm(props: Props) {
+  return (
+    <FormProvider steps={props.steps}>
+      <MultiStepFormContent {...props} />
+    </FormProvider>
   )
 }

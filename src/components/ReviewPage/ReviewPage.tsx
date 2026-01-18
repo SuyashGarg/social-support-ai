@@ -11,6 +11,7 @@ import { useLanguage } from '../../context/LanguageContext';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import isEmpty from 'lodash/isEmpty';
+import { clearSessionData, getFormResponse } from '../../common/storage';
 
 export default function ReviewPage() {
     const navigate = useNavigate();
@@ -18,26 +19,14 @@ export default function ReviewPage() {
     const { isRtl } = useLanguage();
     const { historyId } = useParams<{ historyId?: string }>();
 
-    const clearSessionData = () => {
-        if (typeof window !== 'undefined') {
-            localStorage.removeItem('socialSupportFormData')
-            localStorage.removeItem('socialSupportFormResponse')
-        }
-    }
-
     const response = useMemo(() => {
-        if (typeof window === 'undefined') return null
-        try {
-            if (historyId) {
-                const entry = getHistoryEntryById(historyId)
-                if (!isEmpty(entry)) { return entry?.data ?? null; }
-            }
-            const stored = localStorage.getItem('socialSupportFormResponse')
-            clearSessionData()
-            return stored ? (JSON.parse(stored) as Record<string, string | boolean>) : null
-        } catch {
-            return null
+        if (historyId) {
+            const entry = getHistoryEntryById(historyId)
+            if (!isEmpty(entry)) { return entry?.data ?? null; }
         }
+        const storedResponse = getFormResponse()
+        clearSessionData()
+        return storedResponse
     }, [historyId])
 
     const handleStartOver = () => {
@@ -99,6 +88,7 @@ export default function ReviewPage() {
                         onClick={() => navigate(-1)}
                         startIcon={!isRtl ? <ArrowBackIcon /> : undefined}
                         endIcon={isRtl ? <ArrowForwardIcon /> : undefined}
+                        aria-label={t('app.back')}
                     />)}
                     <CheckCircleIcon sx={styles.titleIcon} />
                     <Typography variant="h5" component="h2" sx={styles.title}>
@@ -140,7 +130,12 @@ export default function ReviewPage() {
                     ))
                 )}
                 <Box sx={styles.actions}>
-                    <Button variant="contained" color="primary" onClick={handleStartOver}>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={handleStartOver}
+                        aria-label={t('app.startOver')}
+                    >
                         {t('app.startOver')}
                     </Button>
                 </Box>

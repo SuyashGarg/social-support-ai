@@ -1,3 +1,20 @@
+/**
+ * AppThemeProvider - MUI Theme and RTL Support Provider
+ * 
+ * ARCHITECTURE DECISION: Separate Emotion cache for RTL/LTR
+ * 
+ * Rationale:
+ * - MUI requires separate Emotion cache instances for RTL/LTR
+ * - RTL plugin must be configured at cache creation time
+ * - Theme direction must match cache direction
+ * - Provides consistent styling across language switches
+ * 
+ * Implementation:
+ * - Creates separate caches for RTL and LTR
+ * - Switches cache based on language direction
+ * - Updates theme direction to match
+ * - Caches are memoized to avoid recreation
+ */
 import { CacheProvider } from '@emotion/react'
 import createCache from '@emotion/cache'
 import { prefixer } from 'stylis'

@@ -1,5 +1,6 @@
 import type { FormElement } from '../../types/form'
 import GoogleAutocompleteField from '../GoogleAutocompleteField'
+import { useForm } from '../MultiStepForm/MultiStepFormContext'
 
 type Props = {
     element: FormElement
@@ -8,9 +9,6 @@ type Props = {
     countryCode?: string | null
     required?: boolean
     errorMessage?: string | null
-    onValueChange: (name: string, nextValue: string | null) => void
-    onMetaChange?: (meta: Record<string, string | null>) => void
-    onBlur: () => void
 }
 
 export default function AutocompleteElement({
@@ -20,10 +18,9 @@ export default function AutocompleteElement({
     countryCode,
     required,
     errorMessage,
-    onValueChange,
-    onMetaChange,
-    onBlur,
 }: Props) {
+    const { onChange, onMetaChange, onBlur } = useForm()
+
     return (
         <GoogleAutocompleteField
             id={element.id}
@@ -35,9 +32,9 @@ export default function AutocompleteElement({
             countryCode={countryCode}
             required={required}
             errorMessage={errorMessage}
-            onValueChange={onValueChange}
-            onMetaChange={onMetaChange}
-            onBlur={onBlur}
+            onValueChange={(name, nextValue) => onChange(name, nextValue ?? '')}
+            onMetaChange={(meta) => onMetaChange?.(element.name, meta)}
+            onBlur={() => onBlur(element, value ?? undefined)}
         />
     )
 }

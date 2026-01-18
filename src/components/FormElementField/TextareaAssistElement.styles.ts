@@ -7,12 +7,24 @@ export const textareaAssistStyles = {
     buttonRow: {
         display: 'flex',
         justifyContent: 'flex-end',
+        padding: { xs: '0.5rem 0', md: '0' },
     },
-    helpButton: {
-        cursor: 'pointer',
+    helpLink: {
+        color: 'primary.main',
+        textDecoration: 'none',
+        fontSize: '0.875rem',
+        '&:hover': {
+            textDecoration: 'underline',
+        },
+        '&:focus': {
+            outline: '2px solid',
+            outlineColor: 'primary.main',
+            outlineOffset: '2px',
+            borderRadius: '2px',
+        },
     },
     dialogField: {
-        marginTop: 8,
+        marginTop: 2,
     },
     errorText: {
         marginTop: 8,

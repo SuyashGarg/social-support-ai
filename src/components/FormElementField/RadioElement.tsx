@@ -22,9 +22,23 @@ export default function RadioElement({
     onBlur,
     renderOptionLabel,
 }: Props) {
+    const errorId = errorMessage ? `${element.id}-error` : undefined
+    const labelId = `${element.id}-label`
+
     return (
-        <FormControl component="fieldset" required={required} error={Boolean(errorMessage)}>
-            <FormLabel component="legend" required={required} sx={{ fontSize: { xs: '0.8rem', md: '1rem' } }}>
+        <FormControl
+            component="fieldset"
+            required={required}
+            error={Boolean(errorMessage)}
+            aria-describedby={errorId}
+            aria-required={required || undefined}
+        >
+            <FormLabel
+                component="legend"
+                id={labelId}
+                required={required}
+                sx={{ fontSize: { xs: '0.8rem', md: '1rem' } }}
+            >
                 {label}
             </FormLabel>
             <RadioGroup
@@ -33,18 +47,25 @@ export default function RadioElement({
                 value={value}
                 onChange={onChange}
                 onBlur={onBlur}
+                aria-labelledby={labelId}
+                aria-describedby={errorId}
+                aria-required={required || undefined}
             >
                 {element.options?.map((option) => (
                     <FormControlLabel
                         key={option.value}
                         value={option.value}
-                        control={<Radio />}
+                        control={<Radio aria-label={renderOptionLabel(option.labelKey)} />}
                         label={renderOptionLabel(option.labelKey)}
                         sx={{ fontSize: { xs: '0.75rem', md: '0.875rem' } }}
                     />
                 ))}
             </RadioGroup>
-            {errorMessage ? <FormHelperText>{errorMessage}</FormHelperText> : null}
+            {errorMessage ? (
+                <FormHelperText id={errorId} role="alert">
+                    {errorMessage}
+                </FormHelperText>
+            ) : null}
         </FormControl>
     )
 }

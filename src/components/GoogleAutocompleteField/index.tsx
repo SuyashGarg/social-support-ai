@@ -1,11 +1,22 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { Autocomplete, TextField } from '@mui/material'
+import { Autocomplete, TextField, Box } from '@mui/material'
 import { List } from 'react-window'
 import type { RowComponentProps } from 'react-window'
 import { useTranslation } from 'react-i18next'
 import { loadGoogleMaps } from '../../google/loader'
 import { LISTBOX_PADDING } from '../../common/constants'
 import { getDir, getTextAlign } from '../../common/utils'
+
+const getRowBaseStyles = (isRtl: boolean) => ({
+    padding: '4px 12px',
+    paddingLeft: isRtl ? '12px' : '16px',
+    paddingRight: isRtl ? '16px' : '12px',
+    minHeight: '36px',
+    display: 'flex',
+    alignItems: 'center',
+    textAlign: getTextAlign(isRtl),
+    direction: getDir(isRtl),
+})
 
 type Option = {
     description: string
@@ -131,6 +142,8 @@ export default function GoogleAutocompleteField({
     const autocompleteService = useRef<google.maps.places.AutocompleteService | null>(null)
     const placesService = useRef<google.maps.places.PlacesService | null>(null)
     const mounted = useRef(true)
+    const rowBaseStyles = useMemo(() => getRowBaseStyles(isRtl), [isRtl])
+    const shouldVirtualize = options.length > 100
 
     useEffect(() => {
         mounted.current = true
@@ -267,32 +280,39 @@ export default function GoogleAutocompleteField({
     )
 
     const renderInput = useCallback(
-        (params: React.ComponentProps<typeof TextField>) => (
-            <TextField
-                {...params}
-                label={t(labelKey)}
-                placeholder={placeholderKey ? t(placeholderKey) : ''}
-                required={required}
-                error={Boolean(errorMessage)}
-                helperText={errorMessage ?? ' '}
-                slotProps={{
-                    inputLabel: {
-                        ...params.InputLabelProps,
-                        required,
-                    },
-                    htmlInput: {
-                        ...params.inputProps,
-                        dir: getDir(isRtl),
-                    },
-                }}
-                size="small"
-                fullWidth
-            />
-        ),
-        [isRtl, labelKey, placeholderKey, required, t],
+        (params: React.ComponentProps<typeof TextField>) => {
+            const errorId = errorMessage ? `${id}-error` : undefined
+            return (
+                <TextField
+                    {...params}
+                    label={t(labelKey)}
+                    placeholder={placeholderKey ? t(placeholderKey) : ''}
+                    required={required}
+                    error={Boolean(errorMessage)}
+                    helperText={errorMessage ?? ' '}
+                    slotProps={{
+                        inputLabel: {
+                            ...params.InputLabelProps,
+                            required,
+                        },
+                        htmlInput: {
+                            ...params.inputProps,
+                            dir: getDir(isRtl),
+                            'aria-describedby': errorId,
+                            'aria-required': required || undefined,
+                            'aria-invalid': Boolean(errorMessage) || undefined,
+                        },
+                    }}
+                    size="small"
+                    fullWidth
+                />
+            )
+        },
+        [id, isRtl, labelKey, placeholderKey, required, errorMessage, t],
     )
 
     const ListboxComponent = useMemo(() => {
+        if (!shouldVirtualize) return undefined
         type RowProps = {
             data: React.ReactElement[]
         }
@@ -300,26 +320,42 @@ export default function GoogleAutocompleteField({
         const Row = ({ index, style, ariaAttributes, data }: RowComponentProps<RowProps>) => {
             const row = data[index]
             if (!row) return null
+            const existingStyle = (row.props as React.HTMLAttributes<HTMLElement>)?.style || {}
+            const existingProps = row.props as React.HTMLAttributes<HTMLElement>
             return React.cloneElement(
                 row,
                 {
-                    style: { ...style, top: (style.top as number) + LISTBOX_PADDING },
+                    ...existingProps,
+                    style: {
+                        ...existingStyle,
+                        ...style,
+                        top: (style.top as number) + LISTBOX_PADDING,
+                        ...rowBaseStyles,
+                    },
                     ...ariaAttributes,
+                    tabIndex: existingProps.tabIndex ?? -1,
                 } as React.HTMLAttributes<HTMLElement>,
             )
         }
 
-        const Inner = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLElement>>(
+        const Inner = React.forwardRef<HTMLUListElement, React.HTMLAttributes<HTMLElement>>(
             function ListboxComponent(props, ref) {
                 const { children, ...other } = props
                 const itemData = React.Children.toArray(children) as React.ReactElement[]
 
                 const itemCount = itemData.length
-                const itemSize = 48
+                const itemSize = 36
                 const height = Math.min(8, itemCount) * itemSize + 2 * LISTBOX_PADDING
 
                 return (
-                    <div ref={ref} {...other}>
+                    <ul
+                        ref={ref as React.Ref<HTMLUListElement>}
+                        {...other}
+                        role="listbox"
+                        tabIndex={-1}
+                        dir={getDir(isRtl)}
+                        style={{ margin: 0, padding: 0, listStyle: 'none', ...other.style }}
+                    >
                         <List<RowProps>
                             rowCount={itemCount}
                             rowHeight={itemSize}
@@ -328,20 +364,23 @@ export default function GoogleAutocompleteField({
                             overscanCount={5}
                             style={{ height, width: '100%' }}
                         />
-                    </div>
+                    </ul>
                 )
             },
         )
 
         return Inner
-    }, [])
+    }, [isRtl, rowBaseStyles, shouldVirtualize])
+
+    const errorId = errorMessage ? `${id}-error` : undefined
+    const selectedOption = options.find((option) => option.description === value) ?? null
 
     return (
         <Autocomplete
             id={id}
             options={options}
             getOptionLabel={getOptionLabel}
-            value={options.find((option) => option.description === value) ?? null}
+            value={selectedOption}
             onChange={handleAutocompleteChange}
             freeSolo
             openOnFocus
@@ -351,11 +390,39 @@ export default function GoogleAutocompleteField({
             inputValue={inputValue}
             onInputChange={handleInputChange}
             filterOptions={(x) => x}
-            slots={{ listbox: ListboxComponent }}
+            disableListWrap={false}
+            slots={shouldVirtualize ? { listbox: ListboxComponent } : undefined}
+            renderOption={(props, option) => {
+                const index = options.findIndex((opt) => opt.placeId === option.placeId)
+                const optionStyles = shouldVirtualize
+                    ? rowBaseStyles
+                    : { textAlign: getTextAlign(isRtl) as 'left' | 'right', direction: getDir(isRtl) as 'ltr' | 'rtl' }
+                return (
+                    <Box
+                        component="li"
+                        {...props}
+                        key={option.placeId}
+                        id={`${id}-option-${index}`}
+                        sx={optionStyles}
+                        dir={getDir(isRtl)}
+                        role="option"
+                        aria-selected={selectedOption?.placeId === option.placeId}
+                        tabIndex={-1}
+                    >
+                        {option.description}
+                    </Box>
+                )
+            }}
             sx={{
                 '& .MuiInputBase-input': { textAlign: getTextAlign(isRtl) },
             }}
             renderInput={renderInput}
+            aria-label={t(labelKey)}
+            aria-describedby={errorId}
+            ListboxProps={{
+                role: 'listbox',
+                dir: getDir(isRtl),
+            }}
         />
     )
 }

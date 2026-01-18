@@ -29,6 +29,7 @@ export default function HistoryPage() {
                         sx={styles.backButton}
                         startIcon={!isRtl ? <ArrowBackIcon /> : undefined}
                         endIcon={isRtl ? <ArrowForwardIcon /> : undefined}
+                        aria-label={t('app.back')}
                     />
                     {t('app.history')}
                 </Typography>
@@ -49,12 +50,30 @@ export default function HistoryPage() {
                     </TableHead>
                     <TableBody>
                         {history.map((entry, index) => (
-                            <TableRow key={entry.id} hover>
+                            <TableRow
+                                key={entry.id}
+                                hover
+                                onClick={() => handleRowClick(entry.id)}
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter' || e.key === ' ') {
+                                        e.preventDefault()
+                                        handleRowClick(entry.id)
+                                    }
+                                }}
+                                role="button"
+                                tabIndex={0}
+                                aria-label={`${t('app.viewDetails')} - ${t('app.serialNo')} ${index + 1}, ${t('app.name')}: ${entry.data.fullName ?? '-'}, ${t('app.email')}: ${entry.data.email ?? '-'}`}
+                            >
                                 <TableCell sx={styles.tableCell}>
                                     <Button
                                         variant="text"
-                                        onClick={() => handleRowClick(entry.id)}
+                                        onClick={(e) => {
+                                            e.stopPropagation()
+                                            handleRowClick(entry.id)
+                                        }}
                                         sx={styles.linkButton}
+                                        aria-hidden="true"
+                                        tabIndex={-1}
                                     >
                                         {index + 1}
                                     </Button>

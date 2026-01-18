@@ -1,3 +1,25 @@
+/**
+ * OpenAI API Serverless Function
+ * 
+ * ARCHITECTURE DECISION: Serverless functions for API key security
+ * 
+ * Rationale:
+ * - API keys must never be exposed to client-side code
+ * - Serverless functions run server-side only
+ * - No backend infrastructure to maintain
+ * - Automatic scaling with Vercel
+ * 
+ * Security:
+ * - API key stored in environment variables
+ * - Only accessible server-side
+ * - Request validation before API call
+ * - Error handling for rate limits and failures
+ * 
+ * Deployment:
+ * - Deployed as Vercel serverless function
+ * - Accessible at /api/openAi endpoint
+ * - Handles CORS automatically
+ */
 import OpenAI from 'openai'
 
 const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
