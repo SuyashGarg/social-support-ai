@@ -185,9 +185,32 @@ If port 3001 is already in use, you can:
   lsof -ti:3001 | xargs kill -9
   ```
 
+## Code Quality & Git Hooks
+
+This project uses **Husky** and **lint-staged** to ensure code quality before commits.
+
+### Pre-commit Hooks
+
+Before each commit, the following checks run automatically:
+- **Linting**: ESLint checks all staged TypeScript/TSX files and auto-fixes issues
+- **Full Lint Check**: Ensures no linting errors exist in the entire codebase
+- **Tests**: Runs all tests to ensure nothing is broken
+
+If any check fails, the commit will be blocked until issues are resolved.
+
+### Bypassing Hooks (Not Recommended)
+
+If you need to bypass hooks in an emergency (not recommended):
+```bash
+git commit --no-verify -m "your message"
+```
+
+**Note:** Only bypass hooks when absolutely necessary. The hooks are there to maintain code quality.
+
 ## Project Structure
 
 - `src/` - React application source code
 - `api/` - Serverless API functions (for Vercel deployment)
 - `public/` - Static assets
 - `dist/` - Production build output
+- `.husky/` - Git hooks configuration

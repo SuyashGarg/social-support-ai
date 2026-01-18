@@ -251,51 +251,18 @@ Navigate to review page
 3. **Modular Components**: Reusable form field components
 4. **Error Boundaries**: Graceful error handling
 5. **Session Persistence**: Form data survives page refreshes
+6. **Code Quality Tools**: Husky pre-commit hooks with lint-staged for automated code quality checks
+7. **Testing Infrastructure**: Vitest with React Testing Library, achieving 97.82% code coverage
 
-### Potential Improvements
+### Future Considerations
 
-1. **Backend Integration**
-   - Replace mock API with real backend
-   - Add user authentication
-   - Store submissions in database
-   - Add submission status tracking
-
-2. **Performance Optimizations**
-   - Code splitting for routes
-   - Lazy loading of form steps
-   - Virtualization for large option lists (already implemented in VirtualizedSelect)
-   - Memoization of expensive computations
-
-3. **Testing**
-   - Unit tests for validation logic
-   - Integration tests for form flow
-   - E2E tests for critical paths
-   - Accessibility testing
-
-4. **Enhanced Features**
-   - Form draft auto-save with timestamps
-   - Offline support with service workers
-   - Form analytics and tracking
-   - Export submissions as PDF
-   - Email notifications
-
-5. **Developer Experience**
-   - Storybook for component documentation
-   - Better error messages and logging
-   - Development tools for form debugging
-   - Automated translation key validation
-
-6. **Security**
-   - Input sanitization
-   - XSS protection
-   - CSRF tokens for API calls
-   - Rate limiting on client side
-
-7. **Accessibility Enhancements**
-   - Screen reader announcements for step changes
-   - High contrast mode support
-   - Reduced motion preferences
-   - Better focus indicators
+- **Backend Integration**: Real backend with authentication, database storage, and submission tracking
+- **Performance**: Code splitting, lazy loading, and memoization optimizations
+- **Testing**: Integration tests, E2E tests, and accessibility testing
+- **Features**: Offline support, PDF export, email notifications, form analytics
+- **Developer Experience**: Storybook, better error logging, translation key validation
+- **Security**: Input sanitization, XSS protection, CSRF tokens, rate limiting
+- **Accessibility**: Screen reader announcements, high contrast mode, reduced motion support
 
 ## File Organization Principles
 
@@ -305,6 +272,39 @@ Navigate to review page
 4. **Type Definitions**: Centralized in `src/types/`
 5. **Constants**: Shared constants in `src/common/constants.ts`
 6. **Utilities**: Reusable functions in `src/common/utils.ts`
+
+## Code Quality & Testing
+
+### Pre-commit Hooks (Husky)
+
+The project uses **Husky** to enforce code quality before commits:
+
+- **lint-staged**: Automatically lints and fixes staged TypeScript/TSX files
+- **Full Lint Check**: Ensures no linting errors exist in the codebase
+- **Test Suite**: Runs all tests to prevent regressions
+
+**Configuration**: `.husky/pre-commit` hook runs:
+1. `yarn lint-staged` - Lint staged files
+2. `yarn lint` - Full lint check
+3. `yarn test:run` - Run test suite
+
+If any check fails, the commit is blocked.
+
+### Testing
+
+- **Framework**: Vitest with React Testing Library
+- **Coverage**: 97.82% statements, 93.02% branches, 100% functions
+- **Test Location**: Tests co-located with source files (`.test.ts`/`.test.tsx`)
+- **Setup**: `src/test/setup.ts` configures testing-library matchers
+
+See [TESTING.md](./TESTING.md) for detailed testing documentation.
+
+### Code Standards
+
+- **Semicolons**: Enforced via ESLint (`semi: ['error', 'always']`)
+- **TypeScript**: Strict mode enabled
+- **Linting**: ESLint with TypeScript ESLint rules
+- **Auto-fix**: `yarn lint:fix` automatically fixes linting issues
 
 ## Build & Deployment
 

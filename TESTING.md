@@ -298,3 +298,23 @@ This opens an interactive interface where you can:
 
 - `src/common/utils.test.ts` - Unit tests for utility functions
 - `src/components/PageHeader.test.tsx` - Component tests with providers
+- `src/common/storage.test.ts` - Storage utility tests with SSR scenarios
+- `src/context/LanguageContext.test.tsx` - Context provider tests
+- `src/providers/AppThemeProvider.test.tsx` - Theme provider tests
+
+## Pre-commit Hooks
+
+This project uses **Husky** to run tests automatically before commits. When you commit code:
+
+1. **lint-staged** runs ESLint on staged files and auto-fixes issues
+2. **Full lint check** ensures no linting errors exist
+3. **Tests** run to ensure nothing is broken
+
+If any check fails, the commit will be blocked. This helps maintain code quality and prevents broken code from being committed.
+
+To manually run the same checks:
+```bash
+yarn lint-staged  # Lint staged files
+yarn lint         # Full lint check
+yarn test:run     # Run all tests
+```

@@ -1,0 +1,11 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Run lint-staged to lint staged files
+yarn lint-staged
+
+# Run full lint check to catch any errors
+yarn lint
+
+# Run tests to ensure nothing is broken
+yarn test:run
