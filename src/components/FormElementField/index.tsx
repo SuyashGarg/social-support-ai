@@ -1,17 +1,17 @@
-import { useCallback } from 'react'
-import { useTranslation } from 'react-i18next'
-import type { FormElement } from '../../types/form'
-import { formatNationalId } from '../../common/utils'
-import TextInputElement from './TextInputElement'
-import TextareaElement from './TextareaElement'
-import TextareaAssistElement from './TextareaAssistElement'
-import SelectElement from './SelectElement'
-import CheckboxElement from './CheckboxElement'
-import RadioElement from './RadioElement'
-import AutocompleteElement from './AutocompleteElement'
-import DatePickerElement from './DatePickerElement'
-import { useLanguage } from '../../context/LanguageContext'
-import { useForm } from '../MultiStepForm/MultiStepFormContext'
+import { useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
+import type { FormElement } from '../../types/form';
+import { formatNationalId } from '../../common/utils';
+import TextInputElement from './TextInputElement';
+import TextareaElement from './TextareaElement';
+import TextareaAssistElement from './TextareaAssistElement';
+import SelectElement from './SelectElement';
+import CheckboxElement from './CheckboxElement';
+import RadioElement from './RadioElement';
+import AutocompleteElement from './AutocompleteElement';
+import DatePickerElement from './DatePickerElement';
+import { useLanguage } from '../../context/LanguageContext';
+import { useForm } from '../MultiStepForm/MultiStepFormContext';
 
 type Props = {
   element: FormElement
@@ -24,7 +24,7 @@ export default function FormElementField({
   value,
   errorMessage,
 }: Props) {
-  const { formData, onChange, onBlur } = useForm()
+  const { formData, onChange, onBlur } = useForm();
   const { t } = useTranslation();
   const { isRtl } = useLanguage();
   const label = t(element.labelKey);
@@ -39,23 +39,23 @@ export default function FormElementField({
       window.setTimeout(() => target.select(), 0);
     },
     [element.inputMode],
-  )
+  );
   const handleTextInputChange = (nextValue: string) => {
-    const formatted = element.type === 'id' ? formatNationalId(nextValue) : nextValue
-    onChange(element.name, formatted)
-  }
+    const formatted = element.type === 'id' ? formatNationalId(nextValue) : nextValue;
+    onChange(element.name, formatted);
+  };
   const handleTextareaValueChange = useCallback(
     (nextValue: string) => {
-      onChange(element.name, nextValue)
+      onChange(element.name, nextValue);
     },
     [element.name, onChange],
-  )
+  );
   const handleTextareaChange = useCallback<React.ChangeEventHandler<HTMLTextAreaElement>>(
     (event) => {
-      onChange(element.name, event.target.value)
+      onChange(element.name, event.target.value);
     },
     [element.name, onChange],
-  )
+  );
 
   switch (element.type) {
     case 'date':
@@ -71,7 +71,7 @@ export default function FormElementField({
           onChange={(nextValue) => onChange(element.name, nextValue)}
           onBlur={() => handleBlur(typeof value === 'string' ? value : '')}
         />
-      )
+      );
     case 'text':
     case 'email':
     case 'tel':
@@ -90,7 +90,7 @@ export default function FormElementField({
           onBlur={(event) => handleBlur(event.currentTarget.value)}
           onFocus={handleTextFocus}
         />
-      )
+      );
     case 'textarea':
       return element.assist ? (
         <TextareaAssistElement
@@ -114,7 +114,7 @@ export default function FormElementField({
           onChange={handleTextareaChange}
           onBlur={(event) => handleBlur(event.currentTarget.value)}
         />
-      )
+      );
     case 'select':
     case 'dropdown':
       return (
@@ -129,7 +129,7 @@ export default function FormElementField({
           errorMessage={errorMessage}
           renderOptionLabel={renderOptionLabel}
         />
-      )
+      );
     case 'country':
     case 'state':
     case 'address':
@@ -146,7 +146,7 @@ export default function FormElementField({
           required={element.required}
           errorMessage={errorMessage}
         />
-      )
+      );
     case 'checkbox':
       return (
         <CheckboxElement
@@ -158,7 +158,7 @@ export default function FormElementField({
           onChange={(event) => onChange(element.name, event.target.checked)}
           onBlur={() => handleBlur(Boolean(value))}
         />
-      )
+      );
     case 'radio':
       return (
         <RadioElement
@@ -171,8 +171,8 @@ export default function FormElementField({
           errorMessage={errorMessage}
           renderOptionLabel={renderOptionLabel}
         />
-      )
+      );
     default:
-      return null
+      return null;
   }
 }

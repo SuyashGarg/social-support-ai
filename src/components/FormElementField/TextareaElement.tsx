@@ -1,5 +1,5 @@
-import { TextField } from '@mui/material'
-import type { TextareaFieldElementProps } from './types'
+import { TextField } from '@mui/material';
+import type { TextareaFieldElementProps } from './types';
 
 export default function TextareaElement({
     element,
@@ -11,7 +11,7 @@ export default function TextareaElement({
     onChange,
     onBlur,
 }: TextareaFieldElementProps) {
-    const errorId = errorMessage ? `${element.id}-error` : undefined
+    const errorId = errorMessage ? `${element.id}-error` : undefined;
 
     return (
         <TextField
@@ -41,5 +41,5 @@ export default function TextareaElement({
             size="small"
             aria-label={label}
         />
-    )
+    );
 }

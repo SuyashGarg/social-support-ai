@@ -1,10 +1,10 @@
-import { Box, LinearProgress, Paper, Typography } from '@mui/material'
-import { useTranslation } from 'react-i18next'
-import type { FormStep } from '../../types/form'
-import FormElementField from '../FormElementField'
-import { formStepCardStyles as styles } from './styles'
-import { useLanguage } from '../../context/LanguageContext'
-import { useForm } from '../MultiStepForm/MultiStepFormContext'
+import { Box, LinearProgress, Paper, Typography } from '@mui/material';
+import { useTranslation } from 'react-i18next';
+import type { FormStep } from '../../types/form';
+import FormElementField from '../FormElementField';
+import { formStepCardStyles as styles } from './styles';
+import { useLanguage } from '../../context/LanguageContext';
+import { useForm } from '../MultiStepForm/MultiStepFormContext';
 
 type Props = {
   step: FormStep
@@ -19,9 +19,9 @@ export default function FormStepCard({
   totalSteps,
   stepLabel,
 }: Props) {
-  const { formData, formErrors } = useForm()
-  const { t } = useTranslation()
-  const { isRtl } = useLanguage()
+  const { formData, formErrors } = useForm();
+  const { t } = useTranslation();
+  const { isRtl } = useLanguage();
 
   return (
     <Paper
@@ -72,5 +72,5 @@ export default function FormStepCard({
         ))}
       </Box>
     </Paper>
-  )
+  );
 }

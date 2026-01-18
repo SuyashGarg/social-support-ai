@@ -20,7 +20,8 @@ export default defineConfig([
       globals: globals.browser,
     },
     rules: {
-      semi: ['error', 'always'],
+      // Enforce semicolons at the end of all statements (standard for this project)
+      'semi': ['error', 'always'],
     },
   },
 ])

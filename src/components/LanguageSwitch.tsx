@@ -1,8 +1,8 @@
-import { Box, Button, ButtonGroup, Typography } from '@mui/material'
-import { useLanguage } from '../context/LanguageContext'
-import { theme } from '../theme'
+import { Box, Button, ButtonGroup, Typography } from '@mui/material';
+import { useLanguage } from '../context/LanguageContext';
+import { theme } from '../theme';
 
-const LABEL = 'Language'
+const LABEL = 'Language';
 
 const buttonBaseStyles = {
   fontSize: { xs: '0.6rem', md: '0.875rem' },
@@ -10,10 +10,10 @@ const buttonBaseStyles = {
   minWidth: 'auto',
   lineHeight: 1.5,
   borderColor: theme.colors.primary,
-}
+};
 
 export default function LanguageSwitch() {
-  const { language, setLanguage } = useLanguage()
+  const { language, setLanguage } = useLanguage();
 
   return (
     <Box
@@ -60,5 +60,5 @@ export default function LanguageSwitch() {
         </Button>
       </ButtonGroup>
     </Box>
-  )
+  );
 }

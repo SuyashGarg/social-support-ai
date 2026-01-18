@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react';
 import {
     Alert,
     Box,
@@ -11,14 +11,14 @@ import {
     Snackbar,
     TextField,
     Typography,
-} from '@mui/material'
-import { useTranslation } from 'react-i18next'
-import type { FormElement } from '../../types/form'
-import { generateTextFromOpenAI } from '../../api/axios'
-import TextareaElement from './TextareaElement'
-import { textareaAssistStyles as styles } from './TextareaAssistElement.styles'
-import { useLanguage } from '../../context/LanguageContext'
-import { getDir } from '../../common/utils'
+} from '@mui/material';
+import { useTranslation } from 'react-i18next';
+import type { FormElement } from '../../types/form';
+import { generateTextFromOpenAI } from '../../api/axios';
+import TextareaElement from './TextareaElement';
+import { textareaAssistStyles as styles } from './TextareaAssistElement.styles';
+import { useLanguage } from '../../context/LanguageContext';
+import { getDir } from '../../common/utils';
 
 type Props = {
     element: FormElement
@@ -41,56 +41,56 @@ export default function TextareaAssistElement({
     onValueChange,
     onBlur,
 }: Props) {
-    const { t } = useTranslation()
-    const { isRtl } = useLanguage()
-    const [isDialogOpen, setIsDialogOpen] = useState(false)
-    const [isLoading, setIsLoading] = useState(false)
-    const [isEditing, setIsEditing] = useState(false)
-    const [suggestion, setSuggestion] = useState('')
-    const [apiError, setApiError] = useState<string | null>(null)
-    const seedText = useMemo(() => (value.trim() ? value.trim() : label), [label, value])
+    const { t } = useTranslation();
+    const { isRtl } = useLanguage();
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [isEditing, setIsEditing] = useState(false);
+    const [suggestion, setSuggestion] = useState('');
+    const [apiError, setApiError] = useState<string | null>(null);
+    const seedText = useMemo(() => (value.trim() ? value.trim() : label), [label, value]);
 
     const handleTextareaChange = useCallback(
         (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-            onValueChange(event.target.value)
+            onValueChange(event.target.value);
         },
         [onValueChange],
-    )
+    );
 
     const handleDialogClose = useCallback(() => {
-        setIsDialogOpen(false)
-        setIsEditing(false)
-    }, [])
+        setIsDialogOpen(false);
+        setIsEditing(false);
+    }, []);
 
     const handleHelpClick = useCallback(async () => {
-        setIsLoading(true)
-        setIsEditing(false)
-        setApiError(null)
+        setIsLoading(true);
+        setIsEditing(false);
+        setApiError(null);
         try {
-            const text = await generateTextFromOpenAI(seedText)
-            setSuggestion(text.trim())
-            setIsDialogOpen(true)
+            const text = await generateTextFromOpenAI(seedText);
+            setSuggestion(text.trim());
+            setIsDialogOpen(true);
         } catch (error: any) {
-            setApiError(error?.response?.data?.error?.message ?? 'Request failed')
+            setApiError(error?.response?.data?.error?.message ?? 'Request failed');
         } finally {
-            setIsLoading(false)
+            setIsLoading(false);
         }
-    }, [seedText])
+    }, [seedText]);
 
     const handleAccept = useCallback(() => {
         if (suggestion) {
-            onValueChange(suggestion)
+            onValueChange(suggestion);
         }
-        handleDialogClose()
-    }, [handleDialogClose, onValueChange, suggestion])
+        handleDialogClose();
+    }, [handleDialogClose, onValueChange, suggestion]);
 
     const handleEdit = useCallback(() => {
-        setIsEditing(true)
-    }, [])
+        setIsEditing(true);
+    }, []);
 
     const handleSuggestionChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-        setSuggestion(event.target.value)
-    }, [])
+        setSuggestion(event.target.value);
+    }, []);
 
     return (
         <Box sx={styles.container}>
@@ -114,8 +114,8 @@ export default function TextareaAssistElement({
                     tabIndex={0}
                     onKeyDown={(e) => {
                         if (e.key === 'Enter' || e.key === ' ') {
-                            e.preventDefault()
-                            handleHelpClick()
+                            e.preventDefault();
+                            handleHelpClick();
                         }
                     }}
                     sx={{
@@ -205,5 +205,5 @@ export default function TextareaAssistElement({
                 </DialogActions>
             </Dialog>
         </Box>
-    )
+    );
 }

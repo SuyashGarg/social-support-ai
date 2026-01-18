@@ -11,6 +11,7 @@
     "module": "ESNext",
     "types": [
       "vite/client",
+      "vitest/globals",
       "google.maps"
     ],
     "skipLibCheck": true,

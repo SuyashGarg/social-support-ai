@@ -1,6 +1,6 @@
-import type { FormElement } from '../../types/form'
-import GoogleAutocompleteField from '../GoogleAutocompleteField'
-import { useForm } from '../MultiStepForm/MultiStepFormContext'
+import type { FormElement } from '../../types/form';
+import GoogleAutocompleteField from '../GoogleAutocompleteField';
+import { useForm } from '../MultiStepForm/MultiStepFormContext';
 
 type Props = {
     element: FormElement
@@ -19,7 +19,7 @@ export default function AutocompleteElement({
     required,
     errorMessage,
 }: Props) {
-    const { onChange, onMetaChange, onBlur } = useForm()
+    const { onChange, onMetaChange, onBlur } = useForm();
 
     return (
         <GoogleAutocompleteField
@@ -36,5 +36,5 @@ export default function AutocompleteElement({
             onMetaChange={(meta) => onMetaChange?.(element.name, meta)}
             onBlur={() => onBlur(element, value ?? undefined)}
         />
-    )
+    );
 }

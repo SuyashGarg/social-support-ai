@@ -1,5 +1,5 @@
-import type { ReactNode } from 'react'
-import React from 'react'
+import type { ReactNode } from 'react';
+import React from 'react';
 
 type Props = {
     children: ReactNode
@@ -10,14 +10,14 @@ type State = {
 }
 
 export default class ErrorBoundary extends React.Component<Props, State> {
-    state: State = { hasError: false }
+    state: State = { hasError: false };
 
     static getDerivedStateFromError() {
-        return { hasError: true }
+        return { hasError: true };
     }
 
     componentDidCatch(error: unknown, info: unknown) {
-        console.error('App crashed', error, info)
+        console.error('App crashed', error, info);
     }
 
     render() {
@@ -26,9 +26,9 @@ export default class ErrorBoundary extends React.Component<Props, State> {
                 <div role="alert" style={{ padding: 24 }}>
                     Something went wrong.
                 </div>
-            )
+            );
         }
 
-        return this.props.children
+        return this.props.children;
     }
 }

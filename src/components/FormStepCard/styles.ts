@@ -1,4 +1,4 @@
-import { theme } from '../../theme'
+import { theme } from '../../theme';
 
 export const formStepCardStyles = {
   formCard: {
@@ -39,4 +39,4 @@ export const formStepCardStyles = {
     flexDirection: 'column' as const,
     gap: { xs: 0.5, md: 3 },
   },
-}
+};

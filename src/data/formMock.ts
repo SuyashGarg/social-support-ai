@@ -1,4 +1,4 @@
-import type { FormStep } from '../types/form'
+import type { FormStep } from '../types/form';
 
 export const formSteps: FormStep[] = [
   {
@@ -195,4 +195,4 @@ export const formSteps: FormStep[] = [
       },
     ],
   },
-]
+];

@@ -1,4 +1,4 @@
-import { theme } from '../theme'
+import { theme } from '../theme';
 
 export const appStyles = {
   page: {
@@ -54,12 +54,11 @@ export const appStyles = {
     fontSize: { xs: '1rem', md: '1.5rem' },
     fontWeight: 700,
     whiteSpace: 'nowrap' as const,
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-    flex: '0 1 auto',
-    maxWidth: '70%',
-    minWidth: 0,
-    width: { xs: '100%', sm: 'auto' },
+    overflow: 'visible',
+    textOverflow: 'clip',
+    flex: '0 0 auto',
+    minWidth: 'fit-content',
+    paddingRight: '4px',
   },
   titleRtl: {
     textAlign: 'right' as const,
@@ -82,4 +81,4 @@ export const appStyles = {
     fontSize: { xs: '0.875rem', md: '1.25rem' },
     fontWeight: 700,
   },
-}
+};

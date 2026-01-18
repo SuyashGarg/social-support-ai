@@ -29,4 +29,4 @@ export const textareaAssistStyles = {
     errorText: {
         marginTop: 8,
     },
-}
+};

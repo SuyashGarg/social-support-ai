@@ -1,10 +1,10 @@
-import React, { useMemo } from 'react'
-import { Autocomplete, TextField } from '@mui/material'
-import { List } from 'react-window'
-import type { RowComponentProps } from 'react-window'
-import { LISTBOX_PADDING } from '../../common/constants'
-import { useLanguage } from '../../context/LanguageContext'
-import { getDir, getTextAlign } from '../../common/utils'
+import React, { useMemo } from 'react';
+import { Autocomplete, TextField } from '@mui/material';
+import { List } from 'react-window';
+import type { RowComponentProps } from 'react-window';
+import { LISTBOX_PADDING } from '../../common/constants';
+import { useLanguage } from '../../context/LanguageContext';
+import { getDir, getTextAlign } from '../../common/utils';
 
 type Option = {
     value: string
@@ -33,7 +33,7 @@ const getRowBaseStyles = (isRtl: boolean) => ({
     alignItems: 'center',
     textAlign: getTextAlign(isRtl) as 'left' | 'right',
     direction: getDir(isRtl) as 'ltr' | 'rtl',
-})
+});
 
 export default function VirtualizedSelect({
     id,
@@ -47,22 +47,22 @@ export default function VirtualizedSelect({
     onChange,
     onBlur,
 }: Props) {
-    const selectedOption = options.find((option) => option.value === value) ?? null
-    const { isRtl } = useLanguage()
-    const rowBaseStyles = useMemo(() => getRowBaseStyles(isRtl), [isRtl])
-    const shouldVirtualize = options.length > 100
+    const selectedOption = options.find((option) => option.value === value) ?? null;
+    const { isRtl } = useLanguage();
+    const rowBaseStyles = useMemo(() => getRowBaseStyles(isRtl), [isRtl]);
+    const shouldVirtualize = options.length > 100;
 
     const ListboxComponent = useMemo(() => {
-        if (!shouldVirtualize) return undefined
+        if (!shouldVirtualize) return undefined;
         type RowProps = {
             data: React.ReactElement[]
         }
 
         const Row = ({ index, style, ariaAttributes, data }: RowComponentProps<RowProps>) => {
-            const row = data[index]
-            if (!row) return null
-            const existingStyle = (row.props as React.HTMLAttributes<HTMLElement>)?.style || {}
-            const existingProps = row.props as React.HTMLAttributes<HTMLElement>
+            const row = data[index];
+            if (!row) return null;
+            const existingStyle = (row.props as React.HTMLAttributes<HTMLElement>)?.style || {};
+            const existingProps = row.props as React.HTMLAttributes<HTMLElement>;
             return React.cloneElement(
                 row,
                 {
@@ -76,16 +76,16 @@ export default function VirtualizedSelect({
                     ...ariaAttributes,
                     tabIndex: existingProps.tabIndex ?? -1,
                 } as React.HTMLAttributes<HTMLElement>,
-            )
-        }
+            );
+        };
 
         const Inner = React.forwardRef<HTMLUListElement, React.HTMLAttributes<HTMLElement>>(
             function ListboxComponent(props, ref) {
-                const { children, ...other } = props
-                const itemData = React.Children.toArray(children) as React.ReactElement[]
-                const itemCount = itemData.length
-                const itemSize = 36
-                const height = Math.min(8, itemCount) * itemSize + 2 * LISTBOX_PADDING
+                const { children, ...other } = props;
+                const itemData = React.Children.toArray(children) as React.ReactElement[];
+                const itemCount = itemData.length;
+                const itemSize = 36;
+                const height = Math.min(8, itemCount) * itemSize + 2 * LISTBOX_PADDING;
 
                 return (
                     <ul
@@ -105,14 +105,14 @@ export default function VirtualizedSelect({
                             style={{ height, width: '100%' }}
                         />
                     </ul>
-                )
+                );
             },
-        )
+        );
 
-        return Inner
-    }, [isRtl, rowBaseStyles, shouldVirtualize])
+        return Inner;
+    }, [isRtl, rowBaseStyles, shouldVirtualize]);
 
-    const errorId = errorMessage ? `${id}-error` : undefined
+    const errorId = errorMessage ? `${id}-error` : undefined;
 
     return (
         <Autocomplete
@@ -124,10 +124,10 @@ export default function VirtualizedSelect({
             isOptionEqualToValue={(option, selected) => option.value === selected.value}
             slots={shouldVirtualize ? { listbox: ListboxComponent } : undefined}
             renderOption={(props, option) => {
-                const index = options.findIndex((opt) => opt.value === option.value)
+                const index = options.findIndex((opt) => opt.value === option.value);
                 const optionStyles = shouldVirtualize
                     ? rowBaseStyles
-                    : { textAlign: getTextAlign(isRtl) as 'left' | 'right', direction: getDir(isRtl) as 'ltr' | 'rtl' }
+                    : { textAlign: getTextAlign(isRtl) as 'left' | 'right', direction: getDir(isRtl) as 'ltr' | 'rtl' };
                 return (
                     <li
                         {...props}
@@ -141,7 +141,7 @@ export default function VirtualizedSelect({
                     >
                         {option.label}
                     </li>
-                )
+                );
             }}
             renderInput={(params) => (
                 <TextField
@@ -183,5 +183,5 @@ export default function VirtualizedSelect({
                 dir: getDir(isRtl),
             }}
         />
-    )
+    );
 }

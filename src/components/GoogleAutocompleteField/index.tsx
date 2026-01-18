@@ -1,11 +1,11 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { Autocomplete, TextField, Box } from '@mui/material'
-import { List } from 'react-window'
-import type { RowComponentProps } from 'react-window'
-import { useTranslation } from 'react-i18next'
-import { loadGoogleMaps } from '../../google/loader'
-import { LISTBOX_PADDING } from '../../common/constants'
-import { getDir, getTextAlign } from '../../common/utils'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Autocomplete, TextField, Box } from '@mui/material';
+import { List } from 'react-window';
+import type { RowComponentProps } from 'react-window';
+import { useTranslation } from 'react-i18next';
+import { loadGoogleMaps } from '../../google/loader';
+import { LISTBOX_PADDING } from '../../common/constants';
+import { getDir, getTextAlign } from '../../common/utils';
 
 const getRowBaseStyles = (isRtl: boolean) => ({
     padding: '4px 12px',
@@ -16,7 +16,7 @@ const getRowBaseStyles = (isRtl: boolean) => ({
     alignItems: 'center',
     textAlign: getTextAlign(isRtl),
     direction: getDir(isRtl),
-})
+});
 
 type Option = {
     description: string
@@ -46,17 +46,17 @@ const getCountryCodeFromPlace = (place?: google.maps.places.PlaceResult | null) 
     const country = place?.address_components?.find(
         (component: google.maps.GeocoderAddressComponent) =>
             component.types.includes('country'),
-    )
-    return country?.short_name ?? null
-}
+    );
+    return country?.short_name ?? null;
+};
 
 const getAdminAreaFromPlace = (place?: google.maps.places.PlaceResult | null) => {
     const state = place?.address_components?.find(
         (component: google.maps.GeocoderAddressComponent) =>
             component.types.includes('administrative_area_level_1'),
-    )
-    return state?.short_name ?? null
-}
+    );
+    return state?.short_name ?? null;
+};
 
 const getCityFromPlace = (place?: google.maps.places.PlaceResult | null) => {
     // Try different city types in order of preference
@@ -64,62 +64,62 @@ const getCityFromPlace = (place?: google.maps.places.PlaceResult | null) => {
         'locality', // City name
         'administrative_area_level_2', // County/City level
         'administrative_area_level_3', // Sub-county level
-    ]
+    ];
 
     for (const type of cityTypes) {
         const city = place?.address_components?.find(
             (component: google.maps.GeocoderAddressComponent) =>
                 component.types.includes(type),
-        )
+        );
         if (city) {
-            return city.long_name ?? null
+            return city.long_name ?? null;
         }
     }
 
-    return null
-}
+    return null;
+};
 
 const getStateNameFromPlace = (place?: google.maps.places.PlaceResult | null) => {
     const state = place?.address_components?.find(
         (component: google.maps.GeocoderAddressComponent) =>
             component.types.includes('administrative_area_level_1'),
-    )
-    return state?.long_name ?? null
-}
+    );
+    return state?.long_name ?? null;
+};
 
 const getStreetAddressFromPlace = (place?: google.maps.places.PlaceResult | null) => {
-    if (!place?.address_components) return null
+    if (!place?.address_components) return null;
 
     const streetNumber = place.address_components.find(
         (component: google.maps.GeocoderAddressComponent) =>
             component.types.includes('street_number'),
-    )
+    );
 
     const route = place.address_components.find(
         (component: google.maps.GeocoderAddressComponent) =>
             component.types.includes('route'),
-    )
+    );
 
-    const parts: string[] = []
+    const parts: string[] = [];
     if (streetNumber?.long_name) {
-        parts.push(streetNumber.long_name)
+        parts.push(streetNumber.long_name);
     }
     if (route?.long_name) {
-        parts.push(route.long_name)
+        parts.push(route.long_name);
     }
 
-    return parts.length > 0 ? parts.join(' ') : null
-}
+    return parts.length > 0 ? parts.join(' ') : null;
+};
 
 const filterPrediction = (option: Option, fieldType: FieldType) => {
     if (fieldType === 'country') {
-        return option.types.includes('country')
+        return option.types.includes('country');
     }
     if (fieldType === 'state') {
-        return option.types.includes('administrative_area_level_1')
+        return option.types.includes('administrative_area_level_1');
     }
-    return true
-}
+    return true;
+};
 
 export default function GoogleAutocompleteField({
     id,
@@ -136,152 +136,152 @@ export default function GoogleAutocompleteField({
     onMetaChange,
     isRtl,
 }: Props) {
-    const { t } = useTranslation()
-    const [options, setOptions] = useState<Option[]>([])
-    const [inputValue, setInputValue] = useState(value ?? '')
-    const autocompleteService = useRef<google.maps.places.AutocompleteService | null>(null)
-    const placesService = useRef<google.maps.places.PlacesService | null>(null)
-    const mounted = useRef(true)
-    const rowBaseStyles = useMemo(() => getRowBaseStyles(isRtl), [isRtl])
-    const shouldVirtualize = options.length > 100
+    const { t } = useTranslation();
+    const [options, setOptions] = useState<Option[]>([]);
+    const [inputValue, setInputValue] = useState(value ?? '');
+    const autocompleteService = useRef<google.maps.places.AutocompleteService | null>(null);
+    const placesService = useRef<google.maps.places.PlacesService | null>(null);
+    const mounted = useRef(true);
+    const rowBaseStyles = useMemo(() => getRowBaseStyles(isRtl), [isRtl]);
+    const shouldVirtualize = options.length > 100;
 
     useEffect(() => {
-        mounted.current = true
+        mounted.current = true;
         return () => {
-            mounted.current = false
-        }
-    }, [])
+            mounted.current = false;
+        };
+    }, []);
 
     useEffect(() => {
-        let cancelled = false
+        let cancelled = false;
 
         loadGoogleMaps().then((googleInstance) => {
-            if (cancelled) return
-            if (!googleInstance) return
+            if (cancelled) return;
+            if (!googleInstance) return;
             if (!autocompleteService.current) {
-                autocompleteService.current = new googleInstance.maps.places.AutocompleteService()
+                autocompleteService.current = new googleInstance.maps.places.AutocompleteService();
             }
             if (!placesService.current) {
-                const container = document.createElement('div')
-                placesService.current = new googleInstance.maps.places.PlacesService(container)
+                const container = document.createElement('div');
+                placesService.current = new googleInstance.maps.places.PlacesService(container);
             }
-        })
+        });
 
         return () => {
-            cancelled = true
-        }
-    }, [])
+            cancelled = true;
+        };
+    }, []);
 
     useEffect(() => {
-        setInputValue(value ?? '')
-    }, [value])
+        setInputValue(value ?? '');
+    }, [value]);
 
     useEffect(() => {
-        const service = autocompleteService.current
-        if (!service) return
+        const service = autocompleteService.current;
+        if (!service) return;
         if (!inputValue) {
-            setOptions([])
-            return
+            setOptions([]);
+            return;
         }
 
         const request: google.maps.places.AutocompletionRequest = {
             input: inputValue,
             types: fieldType === 'address' ? ['address'] : ['(regions)'],
             componentRestrictions: countryCode ? { country: countryCode } : undefined,
-        }
+        };
 
         service.getPlacePredictions(request, (predictions: google.maps.places.AutocompletePrediction[] | null) => {
-            if (!mounted.current) return
+            if (!mounted.current) return;
             const normalized =
                 predictions?.map((prediction: google.maps.places.AutocompletePrediction) => ({
                     description: prediction.description,
                     placeId: prediction.place_id,
                     types: prediction.types ?? [],
-                })) ?? []
-            setOptions(normalized.filter((option) => filterPrediction(option, fieldType)))
-        })
-    }, [inputValue, fieldType, countryCode])
+                })) ?? [];
+            setOptions(normalized.filter((option) => filterPrediction(option, fieldType)));
+        });
+    }, [inputValue, fieldType, countryCode]);
 
     const handleSelect = useCallback((option: Option | null) => {
-        const service = placesService.current
+        const service = placesService.current;
         if (!option || !service) {
-            onValueChange(name, null)
+            onValueChange(name, null);
             onMetaChange?.({
                 countryCode: null,
                 stateCode: null,
                 placeId: null,
-            })
-            setInputValue('')
-            setOptions([])
-            return
+            });
+            setInputValue('');
+            setOptions([]);
+            return;
         }
 
         // For address fields, wait for place details to get street address
         // For other fields, use description immediately
         if (fieldType !== 'address') {
-            onValueChange(name, option.description ?? null)
+            onValueChange(name, option.description ?? null);
         }
 
         service.getDetails(
             { placeId: option.placeId, fields: ['address_components'] },
             (place: google.maps.places.PlaceResult | null) => {
-                if (!mounted.current) return
+                if (!mounted.current) return;
 
                 const meta: Record<string, string | null> = {
                     countryCode: getCountryCodeFromPlace(place),
                     stateCode: getAdminAreaFromPlace(place),
                     placeId: option.placeId,
-                }
+                };
 
                 // For address fields, extract street address, city and state names
                 if (fieldType === 'address') {
-                    const streetAddress = getStreetAddressFromPlace(place)
+                    const streetAddress = getStreetAddressFromPlace(place);
                     // Use street address if available, otherwise fall back to description
-                    const addressValue = streetAddress ?? option.description ?? null
-                    onValueChange(name, addressValue)
-                    meta.city = getCityFromPlace(place)
-                    meta.state = getStateNameFromPlace(place)
+                    const addressValue = streetAddress ?? option.description ?? null;
+                    onValueChange(name, addressValue);
+                    meta.city = getCityFromPlace(place);
+                    meta.state = getStateNameFromPlace(place);
                 }
 
-                onMetaChange?.(meta)
+                onMetaChange?.(meta);
             },
-        )
-    }, [name, fieldType, onMetaChange, onValueChange])
+        );
+    }, [name, fieldType, onMetaChange, onValueChange]);
 
     const getOptionLabel = useCallback(
         (option: string | Option) => (typeof option === 'string' ? option : option.description),
         [],
-    )
+    );
 
     const handleAutocompleteChange = useCallback(
         (_: React.SyntheticEvent, option: Option | string | null, reason: string) => {
             if (reason === 'clear') {
-                handleSelect(null)
-                return
+                handleSelect(null);
+                return;
             }
             if (typeof option === 'string') {
-                onValueChange(name, option)
-                return
+                onValueChange(name, option);
+                return;
             }
-            handleSelect(option)
+            handleSelect(option);
         },
         [handleSelect, name, onValueChange],
-    )
+    );
 
     const handleInputChange = useCallback(
         (_: React.SyntheticEvent, newInputValue: string, reason: string) => {
             if (reason === 'clear') {
-                setInputValue('')
-                return
+                setInputValue('');
+                return;
             }
-            setInputValue(newInputValue)
+            setInputValue(newInputValue);
         },
         [],
-    )
+    );
 
     const renderInput = useCallback(
         (params: React.ComponentProps<typeof TextField>) => {
-            const errorId = errorMessage ? `${id}-error` : undefined
+            const errorId = errorMessage ? `${id}-error` : undefined;
             return (
                 <TextField
                     {...params}
@@ -306,22 +306,22 @@ export default function GoogleAutocompleteField({
                     size="small"
                     fullWidth
                 />
-            )
+            );
         },
         [id, isRtl, labelKey, placeholderKey, required, errorMessage, t],
-    )
+    );
 
     const ListboxComponent = useMemo(() => {
-        if (!shouldVirtualize) return undefined
+        if (!shouldVirtualize) return undefined;
         type RowProps = {
             data: React.ReactElement[]
         }
 
         const Row = ({ index, style, ariaAttributes, data }: RowComponentProps<RowProps>) => {
-            const row = data[index]
-            if (!row) return null
-            const existingStyle = (row.props as React.HTMLAttributes<HTMLElement>)?.style || {}
-            const existingProps = row.props as React.HTMLAttributes<HTMLElement>
+            const row = data[index];
+            if (!row) return null;
+            const existingStyle = (row.props as React.HTMLAttributes<HTMLElement>)?.style || {};
+            const existingProps = row.props as React.HTMLAttributes<HTMLElement>;
             return React.cloneElement(
                 row,
                 {
@@ -335,17 +335,17 @@ export default function GoogleAutocompleteField({
                     ...ariaAttributes,
                     tabIndex: existingProps.tabIndex ?? -1,
                 } as React.HTMLAttributes<HTMLElement>,
-            )
-        }
+            );
+        };
 
         const Inner = React.forwardRef<HTMLUListElement, React.HTMLAttributes<HTMLElement>>(
             function ListboxComponent(props, ref) {
-                const { children, ...other } = props
-                const itemData = React.Children.toArray(children) as React.ReactElement[]
+                const { children, ...other } = props;
+                const itemData = React.Children.toArray(children) as React.ReactElement[];
 
-                const itemCount = itemData.length
-                const itemSize = 36
-                const height = Math.min(8, itemCount) * itemSize + 2 * LISTBOX_PADDING
+                const itemCount = itemData.length;
+                const itemSize = 36;
+                const height = Math.min(8, itemCount) * itemSize + 2 * LISTBOX_PADDING;
 
                 return (
                     <ul
@@ -365,15 +365,15 @@ export default function GoogleAutocompleteField({
                             style={{ height, width: '100%' }}
                         />
                     </ul>
-                )
+                );
             },
-        )
+        );
 
-        return Inner
-    }, [isRtl, rowBaseStyles, shouldVirtualize])
+        return Inner;
+    }, [isRtl, rowBaseStyles, shouldVirtualize]);
 
-    const errorId = errorMessage ? `${id}-error` : undefined
-    const selectedOption = options.find((option) => option.description === value) ?? null
+    const errorId = errorMessage ? `${id}-error` : undefined;
+    const selectedOption = options.find((option) => option.description === value) ?? null;
 
     return (
         <Autocomplete
@@ -393,10 +393,10 @@ export default function GoogleAutocompleteField({
             disableListWrap={false}
             slots={shouldVirtualize ? { listbox: ListboxComponent } : undefined}
             renderOption={(props, option) => {
-                const index = options.findIndex((opt) => opt.placeId === option.placeId)
+                const index = options.findIndex((opt) => opt.placeId === option.placeId);
                 const optionStyles = shouldVirtualize
                     ? rowBaseStyles
-                    : { textAlign: getTextAlign(isRtl) as 'left' | 'right', direction: getDir(isRtl) as 'ltr' | 'rtl' }
+                    : { textAlign: getTextAlign(isRtl) as 'left' | 'right', direction: getDir(isRtl) as 'ltr' | 'rtl' };
                 return (
                     <Box
                         component="li"
@@ -411,7 +411,7 @@ export default function GoogleAutocompleteField({
                     >
                         {option.description}
                     </Box>
-                )
+                );
             }}
             sx={{
                 '& .MuiInputBase-input': { textAlign: getTextAlign(isRtl) },
@@ -424,5 +424,5 @@ export default function GoogleAutocompleteField({
                 dir: getDir(isRtl),
             }}
         />
-    )
+    );
 }

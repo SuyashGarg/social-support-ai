@@ -1,4 +1,4 @@
-import type { FormElement } from '../../types/form'
+import type { FormElement } from '../../types/form';
 
 export type BaseFieldProps = {
     element: FormElement

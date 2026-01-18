@@ -1,5 +1,5 @@
-import { Checkbox, FormControl, FormControlLabel, FormHelperText } from '@mui/material'
-import type { FormElement } from '../../types/form'
+import { Checkbox, FormControl, FormControlLabel, FormHelperText } from '@mui/material';
+import type { FormElement } from '../../types/form';
 
 type Props = {
     element: FormElement
@@ -12,8 +12,8 @@ type Props = {
 }
 
 export default function CheckboxElement({ element, label, checked, required, errorMessage, onChange, onBlur }: Props) {
-    const errorId = errorMessage ? `${element.id}-error` : undefined
-    const labelId = `${element.id}-label`
+    const errorId = errorMessage ? `${element.id}-error` : undefined;
+    const labelId = `${element.id}-label`;
 
     return (
         <FormControl
@@ -44,5 +44,5 @@ export default function CheckboxElement({ element, label, checked, required, err
                 </FormHelperText>
             ) : null}
         </FormControl>
-    )
+    );
 }

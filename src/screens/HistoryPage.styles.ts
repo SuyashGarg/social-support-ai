@@ -1,4 +1,4 @@
-import { theme } from '../theme'
+import { theme } from '../theme';
 
 export const historyPageStyles = {
     container: {
@@ -37,4 +37,4 @@ export const historyPageStyles = {
     tableCell: {
         fontSize: { xs: '0.75rem', md: '0.875rem' },
     },
-}
+};
