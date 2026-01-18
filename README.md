@@ -7,6 +7,7 @@ A React-based application for generating financial hardship statements using Ope
 - Node.js (v18 or higher recommended)
 - npm or yarn package manager
 - OpenAI API key
+- Google Maps API key
 
 ## Installation
 
@@ -23,7 +24,9 @@ npm install
 yarn install
 ```
 
-## Setting Up OpenAI API Key
+## Setting Up API Keys
+
+This application requires both OpenAI and Google Maps API keys to function properly.
 
 ### For Local Development
 
@@ -32,9 +35,10 @@ yarn install
 touch .env
 ```
 
-2. Add your OpenAI API key to `.env`:
+2. Add your API keys to `.env`:
 ```env
 OPENAI_API_KEY=your-openai-api-key-here
+VITE_GOOGLE_MAPS_API_KEY=your-google-maps-api-key-here
 ```
 
 **Important:** Never commit your `.env` file to version control. It should already be in `.gitignore`.
@@ -63,10 +67,13 @@ This will download environment variables from your Vercel project and create a `
 
 1. Go to your project settings in the [Vercel Dashboard](https://vercel.com/dashboard)
 2. Navigate to **Settings** → **Environment Variables**
-3. Add a new environment variable:
+3. Add environment variables:
    - **Name:** `OPENAI_API_KEY`
-   - **Value:** Your OpenAI API key
-   - **Environment:** Select all environments (Production, Preview, Development)
+     - **Value:** Your OpenAI API key
+     - **Environment:** Select all environments (Production, Preview, Development)
+   - **Name:** `VITE_GOOGLE_MAPS_API_KEY`
+     - **Value:** Your Google Maps API key
+     - **Environment:** Select all environments (Production, Preview, Development)
 4. Redeploy your application for the changes to take effect
 
 ## Running the Project
@@ -120,7 +127,9 @@ npm run preview
 yarn preview
 ```
 
-## Getting an OpenAI API Key
+## Getting API Keys
+
+### Getting an OpenAI API Key
 
 If you don't have an OpenAI API key yet:
 
@@ -132,6 +141,22 @@ If you don't have an OpenAI API key yet:
 
 **Note:** Keep your API key secure and never expose it in client-side code or commit it to version control.
 
+### Getting a Google Maps API Key
+
+If you don't have a Google Maps API key yet:
+
+1. Go to [Google Cloud Console](https://console.cloud.google.com/)
+2. Sign up or log in to your account
+3. Create a new project or select an existing one
+4. Navigate to **APIs & Services** → **Library**
+5. Search for "Maps JavaScript API" and enable it
+6. Navigate to **APIs & Services** → **Credentials**
+7. Click **Create Credentials** → **API Key**
+8. Copy the key and add it to your `.env` file as `VITE_GOOGLE_MAPS_API_KEY` (for local development) or Vercel environment variables (for deployment)
+9. (Recommended) Restrict the API key to only the APIs you need (Maps JavaScript API, Places API, etc.) and restrict it by HTTP referrer for web applications
+
+**Note:** Keep your API key secure. While Google Maps API keys are used in client-side code, you should still restrict them appropriately to prevent unauthorized usage.
+
 ## Troubleshooting
 
 ### OpenAI API Key Not Working
@@ -139,6 +164,15 @@ If you don't have an OpenAI API key yet:
 - Ensure the API key is correctly set in your `.env` file (for local) or Vercel environment variables (for deployment)
 - Verify the API key is valid and has sufficient credits
 - Check that the environment variable name is exactly `OPENAI_API_KEY` (case-sensitive)
+- For Vercel deployments, make sure you've redeployed after adding the environment variable
+
+### Google Maps API Key Not Working
+
+- Ensure the API key is correctly set in your `.env` file (for local) or Vercel environment variables (for deployment)
+- Verify the API key is valid and has the required APIs enabled (Maps JavaScript API, Places API, etc.)
+- Check that the environment variable name is exactly `VITE_GOOGLE_MAPS_API_KEY` (case-sensitive)
+- Ensure your API key restrictions allow requests from your domain (for production) or localhost (for development)
+- Check the browser console for specific error messages from Google Maps API
 - For Vercel deployments, make sure you've redeployed after adding the environment variable
 
 ### Port Already in Use
