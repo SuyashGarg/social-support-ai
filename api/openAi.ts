@@ -24,7 +24,19 @@ import OpenAI from 'openai';
 
 const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-export default async function handler(req: any, res: any) {
+type VercelRequest = {
+    method: string;
+    body?: {
+        situation?: string;
+    };
+};
+
+type VercelResponse = {
+    status: (code: number) => VercelResponse;
+    json: (data: { error?: string; text?: string }) => VercelResponse;
+};
+
+export default async function handler(req: VercelRequest, res: VercelResponse) {
     if (req.method !== 'POST') {
         return res.status(405).json({ error: 'Method not allowed' });
     }
@@ -55,8 +67,9 @@ export default async function handler(req: any, res: any) {
         });
 
         return res.status(200).json({ text: response.choices[0].message.content ?? '' });
-    } catch (err: any) {
-        if (err?.status === 429) {
+    } catch (err: unknown) {
+        const error = err as { status?: number };
+        if (error?.status === 429) {
             return res.status(429).json({
                 error: 'OpenAI quota exceeded. Please try again later.',
             });

@@ -70,8 +70,9 @@ export default function TextareaAssistElement({
             const text = await generateTextFromOpenAI(seedText);
             setSuggestion(text.trim());
             setIsDialogOpen(true);
-        } catch (error: any) {
-            setApiError(error?.response?.data?.error?.message ?? 'Request failed');
+        } catch (error: unknown) {
+            const apiError = error as { response?: { data?: { error?: { message?: string } } } };
+            setApiError(apiError?.response?.data?.error?.message ?? 'Request failed');
         } finally {
             setIsLoading(false);
         }

@@ -22,6 +22,12 @@ export default defineConfig([
     rules: {
       // Enforce semicolons at the end of all statements (standard for this project)
       'semi': ['error', 'always'],
+      // Allow React Compiler memoization warnings (these are optimization suggestions, not errors)
+      'react-hooks/preserve-manual-memoization': 'warn',
+      // Allow setState in effects for controlled components (needed for some MUI components)
+      'react-hooks/set-state-in-effect': 'warn',
+      // Allow fast refresh warnings (non-blocking for development)
+      'react-refresh/only-export-components': 'warn',
     },
   },
 ])

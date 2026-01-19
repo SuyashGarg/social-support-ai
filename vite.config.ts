@@ -21,4 +21,4 @@ export default defineConfig({
     setupFiles: './src/test/setup.ts',
     css: true,
   },
-} as any);
+} as ReturnType<typeof defineConfig>);
